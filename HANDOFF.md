@@ -1,8 +1,10 @@
 # Handoff - Irian's portfoliowebsite (WordPress, lokaal via Local)
 
-Laatste update: 2026-08-28. Dit document vervangt de vorige handoff en beschrijft
-de volledige stand van zaken plus wat er in de laatste werksessie is gedaan
-(Platforms-sectie + NL/EN taalknop).
+Laatste update: 2026-08-28 (sessie 2). Dit document vervangt de vorige handoff en
+beschrijft de volledige stand van zaken. Laatste sessie: de open follow-ups uit
+sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
+em-dashes uit de dev-docs, git-repo) plus de Platforms-copy verrijkt. Zie
+sectie 5c. Theme assets nu op `0.20.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -218,7 +220,9 @@ CSS: `.ipb-nav-tools` (flex-wrapper om taalpill + kbd-hint) en `.ipb-lang` in
 `irian_contact_recipient()` leest het adres altijd uit de NL-panels - dus de
 ontvanger klopt ook in EN-modus.
 
-**Engelse content** staat in post meta `_irian_panels_en` op pagina 9. Bron:
+**Engelse content** staat in post meta `_irian_panels_en` op pagina 9. Sinds
+sessie 2 (zie 5c) is die ook via wp-admin te bewerken: de tweede metabox
+"Homepage Panels (EN) - vertaling". De JSON-import blijft werken. Bron:
 `C:/Users/IRIANV~1/AppData/Local/Temp/claude/panels-en.json`. NL-bron:
 `panels.json` in dezelfde map. Importeren:
 
@@ -230,7 +234,86 @@ bash wp.sh eval-file "C:/Users/IRIANV~1/AppData/Local/Temp/claude/import-panels-
 (Beide import-scripts staan in de scratchpad. Recreeren: `update_post_meta( 9,
 '_irian_panels' [of _en], json_decode( file_get_contents( '<pad>.json' ), true ) )`.)
 
-Theme-assetversie staat nu op `0.19.0` (4 plekken in `functions.php`).
+Theme-assetversie staat nu op `0.20.0` (4 plekken in `functions.php`).
+
+---
+
+## 5c. Sessie 2 (2026-08-28) - open follow-ups + Platforms-copy
+
+### EN-content bewerkbaar in wp-admin
+
+`functions.php` registreert de panels-editor nu twee keer:
+
+- "Homepage Panels (NL)" -> post meta `_irian_panels`, form-prefix `panels`
+- "Homepage Panels (EN) - vertaling" -> `_irian_panels_en`, prefix `panels_en`
+
+Leeg laten = de NL-content wordt overal getoond. Zodra er EN-panelen staan
+vervangen die de NL-versie op `?lang=en` (`irian_panels_data()`, ongewijzigd).
+
+Mechaniek:
+- `irian_panels_active_prefix( $set = null )` - static, houdt bij welke metabox
+  nu rendert ('panels' / 'panels_en' / '__PFX__' voor de templates).
+- `irian_field_name()` zet in `data-name-tpl` de tokens `__PFX__` (prefix) en
+  `__INDEX__` (paneelpositie). De inline admin-JS lost die op per
+  `.irian-panels-wrap[data-prefix]`. `renumberAll()` loopt over beide wrappers.
+- Eén set `<script type="text/html">` templates voor beide metaboxen
+  (`irian_panels_render_templates()`, `static $done`-guard). Templates dragen
+  `__PFX__` ook in `name=`, de JS vult 'm in bij toevoegen.
+- `irian_panels_channels()` + `irian_panels_save()` loopt over de twee kanalen
+  en checkt per kanaal de eigen nonce (`irian_panels_nonce` /
+  `irian_panels_en_nonce`). Kanaal zonder geldige nonce wordt overgeslagen.
+
+**Valkuil (opgelost, niet opnieuw introduceren):** de contact-`show_form`
+checkbox had een hardgecodeerde `name="panels[{$index}][data][show_form]"` in
+plaats van via `irian_field_name()`. Met twee metaboxen botste dat: de EN-
+checkbox schreef in NL's `panels[6]...` en zette bij opslaan NL's `show_form` op
+0. Nu via nieuwe helper `irian_checkbox_field()` (hidden + checkbox delen naam en
+tpl). **Regel: elk metabox-veld loopt via `irian_field_name()` of
+`irian_checkbox_field()`, nooit via een handmatige `panels[...]` string.**
+
+Getest via wp-admin: los bewerken van EN, sub-item toevoegen in EN, meermaals
+opslaan (idempotent), geen kruisbesmetting met NL, en de eerdere data-wipe-bug
+komt niet terug.
+
+### Contact-ontvanger
+
+Nu `irianveensma@gmail.com` (was `hello@irianveensma.nl`, mockup-adres). Gezet in
+`_irian_panels` + `_irian_panels_en` (contact-panel) en in `panels.json` /
+`panels-en.json`. `irian_contact_recipient()` leest 'm server-side uit de NL-
+panels; het adres staat niet in de HTML.
+
+### `<title>`-scheidingsteken
+
+Nu `·` (middot, gelijk aan de tagline-puntjes) i.p.v. de WP-default en-dash.
+Filter `document_title_separator` in `inc/i18n.php`.
+
+### Em-dashes uit de dev-docs
+
+Weg uit `README.md` (thema, herschreven want stale), `index.php`, `style.css`,
+de mu-plugin, en de hele `irian-fields`-plugin (comments + de UI-strings
+`- kies -` / `- Tab / sectie -` / lege-waarde `-`). Front-end/`functions.php`/
+`page-home.php` waren al schoon.
+
+### Platforms-copy verrijkt
+
+Prompt Studio en Nieuws Website hebben rijkere tagline/description/features
+gekregen (NL + EN, live meta + JSON-bronnen). **Blijft geanonimiseerd** - Irian:
+"Niet specifiek de de opdrachtgever benoemen". Achtergrond (niet op de site):
+- Prompt Studio = besloten AI-omgeving voor een horecagroothandel. Toegang per account
+  voor geautoriseerd personeel + ketenpartners; elke generatie kost geld, dus
+  bewust gebruik. Op de site: "collega's en ketenpartners", "een horecabranche".
+- Nieuws Website = was een bestaande vaksite, een vaknieuws- en kennisplatform voor
+  ondernemers in de die branche (samenwerking met sectorpartijen,
+  beheert een landelijke kwaliteitsgids). Op de site: "een horecabranche", vier
+  omgevingen admin/redactie/partner/voorkant, geen naam, geen URL.
+
+### Git-repo
+
+`git init` in de projectroot (`C:/Users/Irian Veensma/Local Sites/iriyinport`).
+Whitelist-`.gitignore`: alleen `irian-portfolio-theme`, `irian-fields`,
+`mu-plugins` + root `README.md` / `HANDOFF.md` / `.gitattributes` /`.gitignore`.
+`.gitattributes` normaliseert regeleindes naar LF. 43 files, eerste commit
+`2984b8b` op branch `master`. Geen remote.
 
 ---
 
@@ -256,31 +339,35 @@ Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
 
 ## 7. Open punten / mogelijke follow-ups
 
-- **EN-content niet bewerkbaar in wp-admin.** Alleen via JSON-import. Mogelijke
-  follow-up: tweede metabox "Homepage Panels (English)" die dezelfde
-  render/sanitize-functies hergebruikt op meta key `_irian_panels_en`. Let op:
-  de inline admin-JS is gekoppeld aan `#irian-panels-list` en `name="panels[...]"`
-  - een tweede instantie botst op IDs/names, dus dat vergt aanpassing.
-- **Voorpagina draait op `_irian_panels`, niet op irian-fields.** Optionele
-  opschoning.
-- **Contact-e-mail** is `hello@irianveensma.nl` (uit de mockup). Irians ID-adres
-  is `irianveensma@gmail.com`. Even bevestigen welk adres de ontvanger moet zijn.
-  Staat in de `contact`-panel data (NL en EN), server-side gelezen.
-- **`<title>`-scheidingsteken** is WP-default `&#8211;` (en-dash, geen em-dash).
-  Als Irian ook dat weg wil: filter `document_title_separator`.
-- Em-dashes in dev-docs: `README.md` en een enkele comment bevatten er nog. Niet
-  gerenderd op de site. `functions.php` en `page-home.php` zijn schoon gemaakt.
-- Mooiere project-screenshots uploaden via Media Library.
-- Geen git-repo in het project.
+Afgehandeld in sessie 2 (zie 5c): EN-metabox in wp-admin, contact-adres ->
+gmail, title-separator -> `·`, em-dashes uit de dev-docs, git-repo.
+
+Nog open:
+
+- **Voorpagina draait op `_irian_panels`, niet op irian-fields.** Irian koos
+  bewust: laten staan. Werkt en is battle-tested; herbouw = risico zonder
+  zichtbare winst.
+- **Platforms-items hebben geen `image`.** Optioneel: screenshots/mockups van
+  Prompt Studio en de Nieuws Website toevoegen via Media Library + het
+  `image`-veld per project-item.
+- **Sectie-intro Platforms** zegt "één als eigen project" - klopt mogelijk niet
+  meer nu Nieuws Website als klantwerk beschreven is. Niet aangepast (geen
+  expliciete opdracht). Even checken met Irian.
+- Mooiere work-project-screenshots uploaden via Media Library (`visual` /
+  `visual_mobile` per work-item).
+- Geen git-remote. Lokale repo bestaat wel (commit `2984b8b`).
 
 ---
 
 ## 8. Bestandsoverzicht (thema)
 
 ```
-functions.php            panels-systeem (metabox/render/sanitize/save), enqueue,
-                         wp_localize_script irianI18n, asset-versie 0.19.0
-inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data, filters)
+functions.php            panels-systeem: twee metaboxen (NL + EN) via
+                         irian_panels_channels(), render/sanitize/save,
+                         irian_field_name()/__PFX__, irian_checkbox_field(),
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.20.0
+inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
+                         filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill
 inc/module-demos.php      irian_module_demo() - palette/konami/cursor/seo-report, via irian_str()
 inc/contact-form.php      irian_contact_form() + irian_handle_contact() + recipient
@@ -300,13 +387,14 @@ assets/
   site.css               nav / footer / palette / .ipb-nav-tools / .ipb-lang
   site.js                ⌘K palette, Konami, console, stack/modules interacties, irianI18n
   logo-mark.svg, favicon.svg, favicon-*.png, logo-full.svg
-README.md                thema-uitleg (dev-doc)
+README.md                thema-uitleg (dev-doc, herschreven sessie 2)
 ```
 
 Buiten het thema:
 ```
 wp-content/plugins/irian-fields/          eigen ACF-kloon
 wp-content/mu-plugins/irian-local-editor-fix.php   loopback-fix voor Local
+.gitignore / .gitattributes / README.md   projectroot, in git (sessie 2)
 ```
 
 Contentbronnen (scratchpad, buiten het project):
