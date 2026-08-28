@@ -1,0 +1,38 @@
+# IriyinPort: alleen de zelfgeschreven code staat in versiebeheer.
+# WordPress core, thema's en plugins van derden, uploads, cache, de
+# Local-config en logs blijven erbuiten.
+
+# Alles negeren, daarna gericht toelaten.
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/HANDOFF.md
+
+# Pad openhouden naar wp-content.
+!/app/
+/app/*
+!/app/public/
+/app/public/*
+!/app/public/wp-content/
+/app/public/wp-content/*
+
+# Eigen thema.
+!/app/public/wp-content/themes/
+/app/public/wp-content/themes/*
+!/app/public/wp-content/themes/irian-portfolio-theme/
+
+# Eigen plugin (ACF-kloon).
+!/app/public/wp-content/plugins/
+/app/public/wp-content/plugins/*
+!/app/public/wp-content/plugins/irian-fields/
+
+# mu-plugins (alleen de eigen loopback-fix voor Local).
+!/app/public/wp-content/mu-plugins/
+
+# Binnen de eigen mappen alsnog rommel weren.
+*.log
+*.map
+.DS_Store
+Thumbs.db
+node_modules/

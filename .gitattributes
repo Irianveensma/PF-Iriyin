@@ -1,0 +1,5 @@
+# Normaliseer regeleindes: LF in de repo, ongeacht het OS van de checkout.
+* text=auto eol=lf
+
+*.png binary
+*.svg text eol=lf

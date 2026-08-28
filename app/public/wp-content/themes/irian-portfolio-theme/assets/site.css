@@ -1,0 +1,241 @@
+/* ---------------------------------------------------------
+   Irian Portfolio - site chrome (nav, footer, command palette)
+   Design tokens komen uit panels.css (:root --ipb-*).
+--------------------------------------------------------- */
+
+/* border-box overal: anders lopen inputs met width:100% + padding over
+   hun container heen (o.a. naam/e-mail in het contactformulier). */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+.ipb-section, .ipb-stack, .ipb-hero { scroll-margin-top: 84px; }
+
+body {
+	margin: 0;
+	background: var(--ipb-base, #15171c);
+	background-image:
+		radial-gradient(1200px 600px at 50% -10%, rgba(120, 128, 145, 0.10), transparent 60%),
+		linear-gradient(180deg, #191c22 0%, var(--ipb-base, #15171c) 42%, var(--ipb-base-2, #101116) 100%);
+	background-attachment: fixed;
+	color: var(--ipb-text, #f3f4f6);
+	font-family: 'Inter', sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+body a { color: inherit; text-decoration: none; }
+
+/* Skip link */
+.ipb-skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 200;
+	background: var(--ipb-chrome-light);
+	color: #0a0a0b;
+	padding: 10px 16px;
+	border-radius: 0 0 8px 0;
+	font-size: 14px;
+}
+.ipb-skip-link:focus { left: 0; }
+
+/* NAV */
+.ipb-nav {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: linear-gradient(180deg, rgba(26, 29, 35, 0.85), rgba(19, 21, 26, 0.72));
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-bottom: 1px solid var(--ipb-hairline-dark);
+	box-shadow: 0 1px 0 var(--ipb-relief-top), 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.ipb-nav-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 20px 40px;
+}
+@media (max-width: 640px) { .ipb-nav-inner { padding: 18px 20px; } }
+
+.ipb-logo {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+}
+.ipb-logo-mark {
+	width: 30px;
+	height: 30px;
+	border-radius: 8px;
+	border: 1px solid var(--ipb-hairline);
+	box-shadow: inset 0 1px 0 var(--ipb-relief-top), 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+.ipb-logo-word {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+	font-size: 17px;
+	letter-spacing: 0.14em;
+	text-transform: lowercase;
+	color: var(--ipb-text);
+}
+@media (max-width: 480px) { .ipb-logo-word { display: none; } }
+.ipb-nav-links { display: flex; gap: 32px; font-size: 14px; color: var(--ipb-muted); }
+.ipb-nav-links a:hover { color: var(--ipb-text); }
+
+.ipb-nav-tools { display: flex; align-items: center; gap: 12px; }
+
+.ipb-lang {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 12px;
+	letter-spacing: 0.06em;
+	color: var(--ipb-muted-2);
+	border: 1px solid var(--ipb-hairline);
+	padding: 5px 9px;
+	border-radius: 8px;
+	transition: border-color 0.2s ease, color 0.2s ease;
+}
+.ipb-lang:hover { border-color: var(--ipb-chrome-mid); color: var(--ipb-text); }
+
+.ipb-kbd-hint {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 12px;
+	color: var(--ipb-muted-2);
+	background: transparent;
+	border: 1px solid var(--ipb-hairline);
+	padding: 5px 10px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	cursor: pointer;
+	transition: border-color 0.2s ease, color 0.2s ease;
+}
+.ipb-kbd-hint:hover { border-color: var(--ipb-chrome-mid); color: var(--ipb-muted); }
+.ipb-kbd-hint kbd {
+	font-family: inherit;
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 12px;
+}
+.ipb-kbd-keys { display: inline-flex; gap: 2px; }
+@media (max-width: 780px) { .ipb-nav-links, .ipb-kbd-label { display: none; } }
+
+/* FOOTER */
+.ipb-footer {
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 0 40px;
+}
+@media (max-width: 640px) { .ipb-footer { padding: 0 20px; } }
+.ipb-footer-inner {
+	padding: 32px 0 60px;
+	border-top: 1px solid var(--ipb-hairline-dark);
+	box-shadow: 0 1px 0 var(--ipb-relief-top);
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 12px;
+	color: var(--ipb-muted-2);
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.ipb-footer-top {
+	color: var(--ipb-muted-2);
+	transition: color 0.2s ease;
+}
+.ipb-footer-top:hover { color: var(--ipb-text); }
+
+/* COMMAND PALETTE */
+.ipb-cmdk {
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 14vh 20px 20px;
+}
+.ipb-cmdk[hidden] { display: none; }
+.ipb-cmdk-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(6, 6, 7, 0.6);
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(2px);
+}
+.ipb-cmdk-panel {
+	position: relative;
+	width: 100%;
+	max-width: 540px;
+	background: var(--ipb-surface, #141416);
+	border: 1px solid var(--ipb-hairline);
+	border-radius: 14px;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+	overflow: hidden;
+	animation: ipb-cmdk-in 0.14s ease-out;
+}
+@keyframes ipb-cmdk-in {
+	from { opacity: 0; transform: translateY(-6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+.ipb-cmdk-input {
+	width: 100%;
+	border: none;
+	border-bottom: 1px solid var(--ipb-hairline);
+	background: transparent;
+	color: var(--ipb-text);
+	font-family: 'Inter', sans-serif;
+	font-size: 16px;
+	padding: 18px 20px;
+	outline: none;
+}
+.ipb-cmdk-input::placeholder { color: var(--ipb-muted-2); }
+.ipb-cmdk-list { list-style: none; margin: 0; padding: 8px; max-height: 320px; overflow-y: auto; }
+.ipb-cmdk-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 11px 12px;
+	border-radius: 9px;
+	cursor: pointer;
+	font-size: 14px;
+	color: var(--ipb-muted);
+}
+.ipb-cmdk-item[aria-selected="true"] { background: var(--ipb-surface-2, #1a1a1d); color: var(--ipb-text); }
+.ipb-cmdk-item-label { flex: 1; }
+.ipb-cmdk-item-hint {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 11px;
+	color: var(--ipb-muted-2);
+}
+.ipb-cmdk-empty { padding: 20px; color: var(--ipb-muted-2); font-size: 14px; }
+.ipb-cmdk-foot {
+	display: flex;
+	gap: 16px;
+	padding: 10px 16px;
+	border-top: 1px solid var(--ipb-hairline);
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 11px;
+	color: var(--ipb-muted-2);
+}
+.ipb-cmdk-foot kbd {
+	font-family: inherit;
+	border: 1px solid var(--ipb-hairline);
+	border-radius: 4px;
+	padding: 1px 5px;
+	margin-right: 3px;
+}
+
+a:focus-visible, .ipb-btn:focus-visible, .ipb-kbd-hint:focus-visible {
+	outline: 2px solid var(--ipb-chrome-light);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	.ipb-cmdk-panel { animation: none; }
+}

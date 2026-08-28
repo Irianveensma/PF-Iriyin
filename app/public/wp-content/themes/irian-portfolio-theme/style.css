@@ -1,0 +1,11 @@
+/*
+Theme Name: Irian Portfolio v2
+Description: Persoonlijk portfolio-thema voor Irian Veensma. Donker/metallic design, panelen (Hero, Stack, Work, Lab, Contact) beheerd via de "Homepage Panels" metabox. Geen ACF nodig.
+Author: Irian Veensma
+Version: 0.1.0
+Text Domain: irian-portfolio
+*/
+
+/* Deze file is bewust leeg gehouden (buiten de verplichte header).
+   Alle echte styling staat in assets/panels.css en assets/site.css en
+   wordt via functions.php geladen. */

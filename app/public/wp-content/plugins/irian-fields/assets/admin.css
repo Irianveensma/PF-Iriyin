@@ -1,0 +1,51 @@
+/* Irian Fields: waarde-editor op post-schermen */
+
+.irf-metabox { max-width: 860px; }
+.irf-field { margin: 0 0 16px; }
+.irf-field__label { display: block; font-weight: 600; margin-bottom: 4px; }
+.irf-field__label--container { margin: 4px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; color: #50575e; }
+.irf-field__instructions { margin: 0 0 6px; color: #646970; font-size: 12px; }
+.irf-req { color: #b32d2e; }
+.irf-input.widefat { width: 100%; }
+.irf-inline { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; }
+
+.irf-choices { display: flex; flex-direction: column; gap: 4px; }
+.irf-choice { font-weight: 400; }
+
+.irf-toggle { display: inline-flex; align-items: center; gap: 8px; }
+
+.irf-link { display: grid; gap: 8px; }
+
+.irf-media-preview img.irf-media-img { max-width: 200px; height: auto; display: block; border: 1px solid #dcdcde; border-radius: 4px; margin-bottom: 8px; }
+.irf-media-name { display: inline-block; padding: 4px 8px; background: #f0f0f1; border-radius: 4px; margin-bottom: 8px; }
+
+/* Containers */
+.irf-field--group > .irf-row-body,
+.irf-repeater, .irf-flex { border-left: 3px solid #dcdcde; padding-left: 14px; margin-top: 8px; }
+
+.irf-row {
+	position: relative;
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 14px 14px 14px 34px;
+	margin-bottom: 10px;
+}
+.irf-row-handle { position: absolute; left: 10px; top: 12px; cursor: grab; color: #787c82; }
+.irf-row-remove { position: absolute; top: 8px; right: 10px; color: #b32d2e; font-size: 16px; text-decoration: none; }
+.irf-flex-badge {
+	display: inline-block;
+	font: 500 11px/1 ui-monospace, monospace;
+	text-transform: uppercase;
+	letter-spacing: .04em;
+	color: #50575e;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 3px;
+	padding: 4px 7px;
+	margin-bottom: 10px;
+}
+.irf-flex-add-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.irf-tab-sep { margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #dcdcde; }
+.irf-message { background: #f0f6fc; border-left: 4px solid #72aee6; padding: 1px 12px; margin: 0 0 16px; }
