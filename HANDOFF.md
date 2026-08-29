@@ -7,7 +7,9 @@ em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, de
 Konami-easter-egg volledig verwijderd, de "WordPress snippet library"-module
 hernoemd naar "Eigen WordPress-toolkit", en de opdrachtgever-namen uit de git-
 historie geschrobd. Zie sectie 5c. Sessie 3: git-remote gekoppeld en gepusht,
-Platforms sectie-intro gecorrigeerd. Zie sectie 5d. Theme assets nu op `0.21.0`.
+Platforms sectie-intro gecorrigeerd, twee Modules-titels in lekentaal herschreven
+("Custom cursor interactions" -> "Eigen cursor-effect", "Command palette
+component" -> "Snelmenu (⌘K)"). Zie sectie 5d. Theme assets nu op `0.21.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -385,6 +387,30 @@ dus een her-import overschrijft de fix niet meer. Beide JSON's blijven geldig
 Geverifieerd via curl op NL en EN: HTTP 200, nieuwe tekst zichtbaar, debug.log
 leeg.
 
+### Modules-titels in lekentaal (vervolg op de snippet-library fix uit 5c)
+
+De twee overige technische titels uit sectie 7 zijn ook herschreven, zelfde
+aanpak als "Eigen WordPress-toolkit": titel simpeler, blurb en code-demo
+ongewijzigd.
+
+- **Item 2 (cursor-demo):** "Custom cursor interactions" -> "Eigen
+  cursor-effect" (EN: "Custom cursor interactions" -> "Custom cursor effect").
+- **Item 4 (⌘K-demo):** "Command palette component" -> "Snelmenu (⌘K)" (EN:
+  "Command palette component" -> "Quick menu (⌘K)").
+- Item 0 ("AI content generator") en item 3 ("SEO audit tool") waren al
+  begrijpelijk genoeg, niet aangepast.
+
+Aangepast via `update_post_meta()` op `_irian_panels[4].data.items[2/4].title`
+en `_irian_panels_en[4].data.items[2/4].title` (paneel-index 4 = `lab_grid`),
+plus dezelfde twee titels in `panels.json` / `panels-en.json` (regel 158/172 in
+beide). Geverifieerd op de live pagina (`.ipb-lab-tile-title`): alle 5 tegels
+kloppen in NL en EN, HTTP 200, debug.log leeg, beide JSON's nog geldig.
+
+Interne/technische termen ("Command palette", "Custom cursor" in code-comments,
+de admin-dropdown en aria-labels) zijn expres niet aangepast - die zijn niet
+voor bezoekers, en "command palette" is de gangbare technische naam voor dat
+component.
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
@@ -413,7 +439,8 @@ Afgehandeld in sessie 2 (zie 5c): EN-metabox in wp-admin, contact-adres ->
 gmail, title-separator -> `·`, em-dashes uit de dev-docs, git-repo.
 
 Afgehandeld in sessie 3 (zie 5d): git-remote gekoppeld en gepusht, Platforms
-sectie-intro gecorrigeerd.
+sectie-intro gecorrigeerd, Modules-titels "Custom cursor interactions" en
+"Command palette component" in lekentaal herschreven.
 
 Nog open:
 
