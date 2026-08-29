@@ -183,9 +183,10 @@ Twee items:
   scratch met AI gebouwd. Features als bullets: afbeeldingen/video's genereren,
   captions + social posts met AI, achtergronden weghalen, brand-voice bots,
   interne teamchat, beeldbank. Geen URL (intern).
-- **Nieuws Website** - geanonimiseerd (was een bestaande vaksite; Irian: "verander
-  die site naar Nieuws Website"). Vier panelen als role-chips: Admin /
-  Redactie / Partner / Voorkant. Geen URL. In het Engels heet dit "News Website".
+- **Nieuws Website** - geanonimiseerd (een bestaande nieuws-/vaksite van een
+  opdrachtgever; Irian wil de echte naam en URL nergens tonen). Vier panelen als
+  role-chips: Admin / Redactie / Partner / Voorkant. Geen URL. In het Engels heet
+  dit "News Website".
 
 Sectielabels hernummerd: Work 01, Platforms 02, Modules 03, FAQ 04, Contact 05.
 
@@ -311,15 +312,14 @@ de mu-plugin, en de hele `irian-fields`-plugin (comments + de UI-strings
 ### Platforms-copy verrijkt
 
 Prompt Studio en Nieuws Website hebben rijkere tagline/description/features
-gekregen (NL + EN, live meta + JSON-bronnen). **Blijft geanonimiseerd** - Irian:
-"Niet specifiek de de opdrachtgever benoemen". Achtergrond (niet op de site):
-- Prompt Studio = besloten AI-omgeving voor een horecagroothandel. Toegang per account
-  voor geautoriseerd personeel + ketenpartners; elke generatie kost geld, dus
-  bewust gebruik. Op de site: "collega's en ketenpartners", "een horecabranche".
-- Nieuws Website = was een bestaande vaksite, een vaknieuws- en kennisplatform voor
-  ondernemers in de die branche (samenwerking met sectorpartijen,
-  beheert een landelijke kwaliteitsgids). Op de site: "een horecabranche", vier
-  omgevingen admin/redactie/partner/voorkant, geen naam, geen URL.
+gekregen (NL + EN, live meta + JSON-bronnen). **Blijft geanonimiseerd**: Irian
+wil de echte opdrachtgevers en URL's nergens tonen. Op de site zelf:
+- Prompt Studio = besloten AI-omgeving voor een horecagroothandel. Toegang per
+  account voor geautoriseerd personeel + ketenpartners; elke generatie kost geld,
+  dus bewust gebruik. Op de site: "collega's en ketenpartners", "een horecabranche".
+- Nieuws Website = een bestaande vaknieuws-/kennissite van een opdrachtgever, met
+  vier omgevingen (admin / redactie / partner / voorkant). Op de site: "een
+  horecabranche", geen naam, geen URL.
 
 ### Git-repo
 
