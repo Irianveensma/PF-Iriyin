@@ -9,7 +9,9 @@ hernoemd naar "Eigen WordPress-toolkit", en de opdrachtgever-namen uit de git-
 historie geschrobd. Zie sectie 5c. Sessie 3: git-remote gekoppeld en gepusht,
 Platforms sectie-intro gecorrigeerd, twee Modules-titels in lekentaal herschreven
 ("Custom cursor interactions" -> "Eigen cursor-effect", "Command palette
-component" -> "Snelmenu (⌘K)"). Zie sectie 5d. Theme assets nu op `0.21.0`.
+component" -> "Snelmenu (⌘K)"), en "AI content generator" herschreven zodat
+'ie niet meer overlapt met Prompt Studio in Platforms. Zie sectie 5d. Theme
+assets nu op `0.21.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -397,8 +399,7 @@ ongewijzigd.
   cursor-effect" (EN: "Custom cursor interactions" -> "Custom cursor effect").
 - **Item 4 (⌘K-demo):** "Command palette component" -> "Snelmenu (⌘K)" (EN:
   "Command palette component" -> "Quick menu (⌘K)").
-- Item 0 ("AI content generator") en item 3 ("SEO audit tool") waren al
-  begrijpelijk genoeg, niet aangepast.
+- Item 3 ("SEO audit tool") was al begrijpelijk genoeg, niet aangepast.
 
 Aangepast via `update_post_meta()` op `_irian_panels[4].data.items[2/4].title`
 en `_irian_panels_en[4].data.items[2/4].title` (paneel-index 4 = `lab_grid`),
@@ -410,6 +411,29 @@ Interne/technische termen ("Command palette", "Custom cursor" in code-comments,
 de admin-dropdown en aria-labels) zijn expres niet aangepast - die zijn niet
 voor bezoekers, en "command palette" is de gangbare technische naam voor dat
 component.
+
+### "AI content generator" overlapte met Prompt Studio
+
+Irian merkte op dat de Modules-tegel "AI content generator" hetzelfde verhaal
+lijkt te vertellen als Prompt Studio in Platforms (zie 5a): allebei "AI
+genereert content voor je". Vergelijking gemaakt (tagline/tags/features van
+Prompt Studio naast titel/blurb van de tegel) en aan Irian voorgelegd. Verschil
+in scope is er wel (Prompt Studio = grote interne teamtool met accounts,
+kostenbewaking, beeldbank; de tegel = één los code-snippet dat de Claude API
+aanroept), maar de framing als "generator" maakte dat onduidelijk.
+
+Gekozen aanpak: titel en blurb herschreven zodat het duidelijk een klein,
+losstaand code-voorbeeld is, geen tool:
+
+- NL titel: "AI content generator" -> "AI-snippet: productteksten". Blurb
+  vooraan aangevuld met "Eén losse code-snippet, geen team-tool: ...".
+- EN titel: "AI content generator" -> "AI snippet: product copy". Blurb:
+  "One standalone code snippet, not a team tool: ...".
+
+Tag (`AI · PROTOTYPE`) en het code-voorbeeld zelf ongewijzigd. Aangepast via
+`update_post_meta()` op item 0 van hetzelfde `lab_grid`-paneel (NL + EN) en in
+`panels.json` / `panels-en.json`. Geverifieerd: `.ipb-lab-tile-title` toont de
+nieuwe tekst in beide talen, HTTP 200, debug.log leeg, JSON's nog geldig.
 
 ---
 
@@ -440,7 +464,8 @@ gmail, title-separator -> `·`, em-dashes uit de dev-docs, git-repo.
 
 Afgehandeld in sessie 3 (zie 5d): git-remote gekoppeld en gepusht, Platforms
 sectie-intro gecorrigeerd, Modules-titels "Custom cursor interactions" en
-"Command palette component" in lekentaal herschreven.
+"Command palette component" in lekentaal herschreven, "AI content generator"
+herschreven om overlap met Prompt Studio weg te nemen.
 
 Nog open:
 
