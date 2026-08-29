@@ -3,8 +3,10 @@
 Laatste update: 2026-08-29 (sessie 2). Dit document vervangt de vorige handoff en
 beschrijft de volledige stand van zaken. Laatste sessie: de open follow-ups uit
 sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
-em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, en de
-Konami-easter-egg volledig verwijderd. Zie sectie 5c. Theme assets nu op `0.21.0`.
+em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, de
+Konami-easter-egg volledig verwijderd, de "WordPress snippet library"-module
+hernoemd naar "Eigen WordPress-toolkit", en de opdrachtgever-namen uit de git-
+historie geschrobd. Zie sectie 5c. Theme assets nu op `0.21.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -321,13 +323,33 @@ wil de echte opdrachtgevers en URL's nergens tonen. Op de site zelf:
   vier omgevingen (admin / redactie / partner / voorkant). Op de site: "een
   horecabranche", geen naam, geen URL.
 
+### Modules: "WordPress snippet library" verduidelijkt
+
+Titel was te vaag voor een leek. Nu **"Eigen WordPress-toolkit"** (EN: "My
+WordPress toolkit") met een blurb in gewone taal: een eigen verzameling
+herbruikbare stukjes WordPress-code, scheelt tijd en fouten. Code-voorbeeld
+ongewijzigd. Gewijzigd in `_irian_panels` + `_irian_panels_en` + de JSON-bronnen.
+
 ### Git-repo
 
 `git init` in de projectroot (`C:/Users/Irian Veensma/Local Sites/iriyinport`).
 Whitelist-`.gitignore`: alleen `irian-portfolio-theme`, `irian-fields`,
 `mu-plugins` + root `README.md` / `HANDOFF.md` / `.gitattributes` /`.gitignore`.
-`.gitattributes` normaliseert regeleindes naar LF. 43 files, eerste commit
-`2984b8b` op branch `master`. Geen remote.
+`.gitattributes` normaliseert regeleindes naar LF. Geen remote (push kan niet:
+geen remote, geen `gh` CLI; Irian koos "lokaal laten").
+
+De volledige historie is met `git filter-branch` herschreven om
+opdrachtgever-namen (`Frituurwereld`, `VHC`) uit alle oude commit-diffs te halen,
+ook uit `panel-projects.php`-comments. Alle commit-hashes zijn daardoor veranderd.
+Huidige log (5 commits, branch `master`):
+
+```
+bd5242f  panel-projects.php: opdrachtgever-naam uit code-comments
+352d042  HANDOFF: opdrachtgevers geanonimiseerd
+76bc889  Konami-easter-egg volledig verwijderd
+cee62fb  HANDOFF: sessie 2 gedocumenteerd
+44328d1  Eerste commit: eigen thema, irian-fields plugin, mu-plugin
+```
 
 ---
 
