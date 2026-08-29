@@ -3,7 +3,7 @@
  * Panel: Projects (grotere builds).
  *
  * Uitgebreidere schrijf-ups van de grotere dingen die Irian gebouwd heeft
- * (Prompt Studio, een bestaande vaksite). Gestapelde kaarten, zelfde uitgefreesde
+ * (Prompt Studio, Nieuws Website). Gestapelde kaarten, zelfde uitgefreesde
  * behandeling als de Work-blokken.
  *
  * @param array $args Panel data.
