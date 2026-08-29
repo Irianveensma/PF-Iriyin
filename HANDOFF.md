@@ -377,9 +377,10 @@ zonder de werk/prive-splitsing:
 Dit is content, geen code: aangepast via `update_post_meta()` direct op
 `_irian_panels[3].data.section_intro` en `_irian_panels_en[3].data.section_intro`
 (pagina 9, paneel-index 3 = het `projects`-paneeltype). Niet in de repo, dus geen
-commit hiervoor nodig. **Let op:** de JSON-content-bronnen (`panels.json` /
-`panels-en.json` in de scratchpad, zie sectie 8) zijn hier NIET in bijgewerkt -
-als die ooit opnieuw geimporteerd worden overschrijven ze deze fix.
+commit hiervoor nodig. De JSON-content-bronnen (`panels.json` / `panels-en.json`
+in de scratchpad, zie sectie 8) zijn hierna ook bijgewerkt (regel 89 in beide),
+dus een her-import overschrijft de fix niet meer. Beide JSON's blijven geldig
+(`json_decode` gecheckt).
 
 Geverifieerd via curl op NL en EN: HTTP 200, nieuwe tekst zichtbaar, debug.log
 leeg.
@@ -424,9 +425,6 @@ Nog open:
   `image`-veld per project-item.
 - Mooiere work-project-screenshots uploaden via Media Library (`visual` /
   `visual_mobile` per work-item).
-- `panels.json` / `panels-en.json` (contentbronnen in scratchpad) hebben de
-  oude Platforms-intro nog. Bij een volgende her-import (zie sectie 5b) eerst
-  bijwerken, anders overschrijft de import de sessie-3-fix.
 
 ---
 
