@@ -161,9 +161,10 @@ terugdraait op Local. Gated op `wp_get_environment_type() === 'local'`.
 | 22 | Sita Design, mobiel-screenshot |
 | 23 | IRIYIN favicon (ook site_icon) |
 
-Screenshots 19-22 zijn first-pass (Edge headless). Irian kan mooiere uploaden via
-Media Library en de `visual` / `visual_mobile` velden van de work-items aanpassen.
-De pp-desktop shot toont de "geen nieuwe klanten"-balk van de echte site.
+Screenshots 19-22 zijn met Edge headless gemaakt (zie 5d voor de sessie-3-fix:
+banner uit de pp-shots, mobile-overflow gefixt, mobile nu 600x860 i.p.v.
+400x860). Irian kan alsnog mooiere uploaden via Media Library en de `visual` /
+`visual_mobile` velden van de work-items aanpassen als hij wil.
 
 ---
 
@@ -412,6 +413,50 @@ de admin-dropdown en aria-labels) zijn expres niet aangepast - die zijn niet
 voor bezoekers, en "command palette" is de gangbare technische naam voor dat
 component.
 
+### Work-screenshots opnieuw vastgelegd
+
+Twee losse problemen gevonden en opgelost in de Edge-headless-screenshotmethode
+(zie sectie 2):
+
+**1. Pedicure Paulina toonde een tijdelijke banner.** `pp-desktop.png` en
+`pp-mobile.png` (media 19/20) waren gemaakt terwijl de live site een
+"Tijdelijk geen nieuwe klanten"-melding toonde - niet representatief voor een
+portfolio-screenshot. Opgelost door de nav en de hero apart te vangen (ruime
+`--window-size`, pixel-scan met GD naar de kleurgrens van het bannerblok) en
+zonder de banier-band aan elkaar te plakken met `imagecopy()`. Geen zichtbare
+naad; achtergrondkleur van nav en pagina lopen bijna gelijk.
+
+**2. Mobile screenshots (alle drie) waren aan de rechterkant afgesneden**, ook
+op onze eigen site. Bleek geen paginabug: de eerdere `--window-size=400,...`
+capture rendert wel op de juiste breedte, maar bij smalle telefoonbreedtes
+(~400-450px) past nav-content (taalpil + `⌘K`-hint, of het logo van de
+klantsites) niet zonder te overlopen buiten het scherm - vermoedelijk een
+site-brede responsive-hiaat onder ~500px die niet eerder getest is (de
+overflow-check in sectie 10 ging alleen over de Platforms-sectie op 375px, niet
+de volledige nav). Pragmatische fix voor de screenshots: vangen op 600px
+breedte in plaats van 400px - nog steeds de mobiele (gestapelde/hamburger)
+layout, maar breed genoeg om niets af te snijden. Niet erg zichtbaar in het
+eindresultaat, want `.ipb-device--phone__screen img` toont de foto via
+`object-fit: cover` op een klein kader (17% van de kaartbreedte).
+
+**Los aandachtspunt (niet opgelost, buiten scope van deze taak):** de eigen
+nav lijkt onder ~500px breed al over te lopen in headless. Nog niet bevestigd
+of dat ook op een echt smalle telefoon (bv. 375px) gebeurt of alleen een
+headless-artefact is - de moeite waard om ooit met een echt toestel of de
+in-app browser-pane te checken.
+
+Media vervangen (bestand overschreven + `wp_generate_attachment_metadata()`
+opnieuw gedraaid zodat alle WP-formaten meekomen):
+- Media 19 (`pp-desktop.png`) - banner weg, 1440x1000 ongewijzigd.
+- Media 20 (`pp-mobile.png`) - banner weg + overflow-fix, nu 600x860 (was
+  400x860).
+- Media 22 (`sd-mobile.png`) - alleen overflow-fix, nu 600x860 (was 400x860).
+- Media 21 (`sd-desktop.png`, Sita Design) - ongewijzigd, was al goed.
+
+Geverifieerd: HTTP 200, debug.log leeg, de nieuwe screenshots kloppen in de
+MacBook- en telefoon-mockups op de live Work-sectie (curl + Edge-headless
+full-page check).
+
 ### "AI content generator" overlapte met Prompt Studio
 
 Irian merkte op dat de Modules-tegel "AI content generator" hetzelfde verhaal
@@ -465,7 +510,9 @@ gmail, title-separator -> `·`, em-dashes uit de dev-docs, git-repo.
 Afgehandeld in sessie 3 (zie 5d): git-remote gekoppeld en gepusht, Platforms
 sectie-intro gecorrigeerd, Modules-titels "Custom cursor interactions" en
 "Command palette component" in lekentaal herschreven, "AI content generator"
-herschreven om overlap met Prompt Studio weg te nemen.
+herschreven om overlap met Prompt Studio weg te nemen, work-screenshots
+opnieuw vastgelegd (banner weg, mobile-overflow-bug in de vangmethode
+gefixt).
 
 Nog open:
 
@@ -475,8 +522,12 @@ Nog open:
 - **Platforms-items hebben geen `image`.** Optioneel: screenshots/mockups van
   Prompt Studio en de Nieuws Website toevoegen via Media Library + het
   `image`-veld per project-item.
+- **Mogelijk responsive-hiaat in de eigen nav onder ~500px breed** (zie 5d) -
+  ontdekt via headless screenshots, nog niet bevestigd op een echt smal
+  toestel. Even checken.
 - Mooiere work-project-screenshots uploaden via Media Library (`visual` /
-  `visual_mobile` per work-item).
+  `visual_mobile` per work-item) als Irian nog beter bronmateriaal heeft dan
+  de Edge-headless-vangst.
 
 ---
 
