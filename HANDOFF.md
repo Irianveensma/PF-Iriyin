@@ -1,12 +1,13 @@
 # Handoff - Irian's portfoliowebsite (WordPress, lokaal via Local)
 
-Laatste update: 2026-08-29 (sessie 2). Dit document vervangt de vorige handoff en
-beschrijft de volledige stand van zaken. Laatste sessie: de open follow-ups uit
+Laatste update: 2026-08-29 (sessie 3). Dit document vervangt de vorige handoff en
+beschrijft de volledige stand van zaken. Sessie 2: de open follow-ups uit
 sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
 em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, de
 Konami-easter-egg volledig verwijderd, de "WordPress snippet library"-module
 hernoemd naar "Eigen WordPress-toolkit", en de opdrachtgever-namen uit de git-
-historie geschrobd. Zie sectie 5c. Theme assets nu op `0.21.0`.
+historie geschrobd. Zie sectie 5c. Sessie 3: git-remote gekoppeld en gepusht,
+Platforms sectie-intro gecorrigeerd. Zie sectie 5d. Theme assets nu op `0.21.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -353,6 +354,38 @@ cee62fb  HANDOFF: sessie 2 gedocumenteerd
 
 ---
 
+## 5d. Sessie 3 (2026-08-29) - remote gekoppeld, Platforms-intro gecorrigeerd
+
+### Git-remote
+
+`origin` gekoppeld aan `https://github.com/Irianveensma/PF-Iriyin.git` en de
+lokale `master` (6 commits) gepusht (`-u`, dus tracked). `gh` CLI is niet
+beschikbaar; gewoon `git push` via de credential-manager.
+
+### Platforms sectie-intro gecorrigeerd
+
+De intro zei nog "één voor mijn werk, één als eigen project" - klopte niet meer
+sinds Nieuws Website ook als opdrachtgever-werk beschreven staat (zie 5a: geen
+van beide items is nog een puur persoonlijk project). Aangepast naar een tekst
+zonder de werk/prive-splitsing:
+
+- NL: "Twee grotere dingen die ik gebouwd heb, allebei van de grond af opgezet,
+  met AI door het hele proces heen."
+- EN: "Two bigger things I built, both set up from scratch, with AI throughout
+  the whole process."
+
+Dit is content, geen code: aangepast via `update_post_meta()` direct op
+`_irian_panels[3].data.section_intro` en `_irian_panels_en[3].data.section_intro`
+(pagina 9, paneel-index 3 = het `projects`-paneeltype). Niet in de repo, dus geen
+commit hiervoor nodig. **Let op:** de JSON-content-bronnen (`panels.json` /
+`panels-en.json` in de scratchpad, zie sectie 8) zijn hier NIET in bijgewerkt -
+als die ooit opnieuw geimporteerd worden overschrijven ze deze fix.
+
+Geverifieerd via curl op NL en EN: HTTP 200, nieuwe tekst zichtbaar, debug.log
+leeg.
+
+---
+
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
 
 Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
@@ -378,6 +411,9 @@ Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
 Afgehandeld in sessie 2 (zie 5c): EN-metabox in wp-admin, contact-adres ->
 gmail, title-separator -> `·`, em-dashes uit de dev-docs, git-repo.
 
+Afgehandeld in sessie 3 (zie 5d): git-remote gekoppeld en gepusht, Platforms
+sectie-intro gecorrigeerd.
+
 Nog open:
 
 - **Voorpagina draait op `_irian_panels`, niet op irian-fields.** Irian koos
@@ -386,12 +422,11 @@ Nog open:
 - **Platforms-items hebben geen `image`.** Optioneel: screenshots/mockups van
   Prompt Studio en de Nieuws Website toevoegen via Media Library + het
   `image`-veld per project-item.
-- **Sectie-intro Platforms** zegt "één als eigen project" - klopt mogelijk niet
-  meer nu Nieuws Website als klantwerk beschreven is. Niet aangepast (geen
-  expliciete opdracht). Even checken met Irian.
 - Mooiere work-project-screenshots uploaden via Media Library (`visual` /
   `visual_mobile` per work-item).
-- Geen git-remote. Lokale repo bestaat wel (commit `2984b8b`).
+- `panels.json` / `panels-en.json` (contentbronnen in scratchpad) hebben de
+  oude Platforms-intro nog. Bij een volgende her-import (zie sectie 5b) eerst
+  bijwerken, anders overschrijft de import de sessie-3-fix.
 
 ---
 
