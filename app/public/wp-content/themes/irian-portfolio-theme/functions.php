@@ -32,16 +32,16 @@ add_action( 'after_setup_theme', 'irian_theme_setup' );
  * Enqueue front-end styles and fonts.
  */
 function irian_enqueue_assets() {
-	wp_enqueue_style( 'irian-style', get_stylesheet_uri(), array(), '0.20.0' );
-	wp_enqueue_style( 'irian-panels', get_template_directory_uri() . '/assets/panels.css', array(), '0.20.0' );
-	wp_enqueue_style( 'irian-site', get_template_directory_uri() . '/assets/site.css', array( 'irian-panels' ), '0.20.0' );
+	wp_enqueue_style( 'irian-style', get_stylesheet_uri(), array(), '0.21.0' );
+	wp_enqueue_style( 'irian-panels', get_template_directory_uri() . '/assets/panels.css', array(), '0.21.0' );
+	wp_enqueue_style( 'irian-site', get_template_directory_uri() . '/assets/site.css', array( 'irian-panels' ), '0.21.0' );
 	wp_enqueue_style(
 		'irian-fonts',
 		'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap',
 		array(),
 		null
 	);
-	wp_enqueue_script( 'irian-site', get_template_directory_uri() . '/assets/site.js', array(), '0.20.0', true );
+	wp_enqueue_script( 'irian-site', get_template_directory_uri() . '/assets/site.js', array(), '0.21.0', true );
 
 	wp_localize_script(
 		'irian-site',
@@ -334,7 +334,7 @@ function irian_render_lab_item( $panel_index, $item_index, $item = array() ) {
 			<select <?php echo irian_field_name( $panel_index, "{$base}[demo]" ); ?>>
 				<?php
 				$demo = $item['demo'] ?? '';
-				foreach ( array( '' => '(geen)', 'palette' => 'Command palette', 'konami' => 'Konami-code', 'cursor' => 'Custom cursor', 'seo-report' => 'SEO-audit uitvoer' ) as $k => $lbl ) :
+				foreach ( array( '' => '(geen)', 'palette' => 'Command palette', 'cursor' => 'Custom cursor', 'seo-report' => 'SEO-audit uitvoer' ) as $k => $lbl ) :
 					?>
 					<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $demo, $k ); ?>><?php echo esc_html( $lbl ); ?></option>
 				<?php endforeach; ?>
@@ -616,7 +616,7 @@ function irian_sanitize_panel_data( $type, $data ) {
 			$out['items'] = array();
 			if ( isset( $data['items'] ) && is_array( $data['items'] ) ) {
 				$allowed_ctype = array( 'none', 'demo', 'code', 'image' );
-				$allowed_demo  = array( '', 'palette', 'konami', 'cursor', 'seo-report' );
+				$allowed_demo  = array( '', 'palette', 'cursor', 'seo-report' );
 				foreach ( $data['items'] as $item ) {
 					$out['items'][] = array(
 						'title'        => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',

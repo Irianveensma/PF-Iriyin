@@ -1,7 +1,6 @@
 /* ---------------------------------------------------------
    Irian Portfolio - front-end interacties
    - ⌘K / Ctrl+K command palette
-   - Konami-code easter egg
    - verborgen console-bericht
 --------------------------------------------------------- */
 ( function () {
@@ -20,19 +19,6 @@
 			'font-family: monospace; font-size: 12px; color: #5c5d61;'
 		);
 	} catch ( e ) {}
-
-	/* ---------- Konami-code ---------- */
-	var konami = [ 'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
-	var progress = 0;
-	window.addEventListener( 'keydown', function ( e ) {
-		progress = ( e.key === konami[ progress ] ) ? progress + 1 : ( e.key === konami[ 0 ] ? 1 : 0 );
-		if ( progress === konami.length ) {
-			document.body.style.transition = 'filter 0.3s ease';
-			document.body.style.filter = 'invert(1) hue-rotate(180deg)';
-			setTimeout( function () { document.body.style.filter = 'none'; }, 1400 );
-			progress = 0;
-		}
-	} );
 
 	/* ---------- Stack: klikbare skill-tags met visueel beeld + uitleg ---------- */
 	( function initStack() {
@@ -94,7 +80,6 @@
 			var shown = panels.filter( function ( p ) { return ! p.hidden; } )[ 0 ];
 			if ( shown ) {
 				initCursorDemo( shown );
-				initKonamiDemo( shown );
 			}
 		}
 
@@ -152,26 +137,6 @@
 			}
 		}
 
-		/* --- Konami-demo in het paneel --- */
-		function initKonamiDemo( scope ) {
-			var box = scope.querySelector( '.ipb-demo--konami' );
-			if ( ! box || box.dataset.bound ) { return; }
-			box.dataset.bound = '1';
-			var seq = [ 'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
-			var bar = box.querySelector( '.ipb-demo-progress span' );
-			var n = 0;
-			box.addEventListener( 'keydown', function ( e ) {
-				var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-				n = ( key === seq[ n ] ) ? n + 1 : ( key === seq[ 0 ] ? 1 : 0 );
-				if ( bar ) { bar.style.width = ( n / seq.length * 100 ) + '%'; }
-				if ( n === seq.length ) {
-					box.classList.add( 'is-hit' );
-					setTimeout( function () { box.classList.remove( 'is-hit' ); if ( bar ) { bar.style.width = '0%'; } }, 1400 );
-					n = 0;
-				}
-				if ( [ 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight' ].indexOf( e.key ) !== -1 ) { e.preventDefault(); }
-			} );
-		}
 	} )();
 
 	/* ---------- Command palette ---------- */

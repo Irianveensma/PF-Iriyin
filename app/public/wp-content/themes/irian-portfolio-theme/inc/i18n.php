@@ -118,8 +118,6 @@ function irian_strings() {
 
 			'demo_palette_btn'    => 'Open de command palette',
 			'demo_palette_hint'   => 'Dit is exact dezelfde component als in de nav.',
-			'demo_konami_aria'    => 'Klik en typ de Konami-code',
-			'demo_konami_hint'    => 'Klik hier en typ de reeks. (Werkt trouwens overal op de site.)',
 			'demo_cursor_move'    => 'Beweeg je muis hier',
 			'demo_cursor_target'  => 'hover mij',
 			'demo_report_hint'    => 'Voorbeelduitvoer. De echte tool crawlt een opgegeven URL.',
@@ -184,8 +182,6 @@ function irian_strings() {
 
 			'demo_palette_btn'    => 'Open the command palette',
 			'demo_palette_hint'   => 'This is the exact same component that sits in the nav.',
-			'demo_konami_aria'    => 'Click and type the Konami code',
-			'demo_konami_hint'    => 'Click here and type the sequence. (It works anywhere on the site, by the way.)',
 			'demo_cursor_move'    => 'Move your mouse here',
 			'demo_cursor_target'  => 'hover me',
 			'demo_report_hint'    => 'Sample output. The real tool crawls a given URL.',

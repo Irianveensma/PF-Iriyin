@@ -21,18 +21,6 @@ function irian_module_demo( $slug ) {
 				. '<p class="ipb-demo-hint"><kbd>&#8984;</kbd><kbd>K</kbd> / <kbd>Ctrl</kbd><kbd>K</kbd>. ' . esc_html( irian_str( 'demo_palette_hint' ) ) . '</p>'
 				. '</div>';
 
-		case 'konami':
-			$keys = array( '↑', '↑', '↓', '↓', '←', '→', '←', '→', 'B', 'A' );
-			$caps = '';
-			foreach ( $keys as $k ) {
-				$caps .= '<kbd class="ipb-keycap">' . esc_html( $k ) . '</kbd>';
-			}
-			return '<div class="ipb-demo ipb-demo--konami" tabindex="0" role="button" aria-label="' . esc_attr( irian_str( 'demo_konami_aria' ) ) . '">'
-				. '<div class="ipb-keycaps">' . $caps . '</div>'
-				. '<p class="ipb-demo-hint">' . esc_html( irian_str( 'demo_konami_hint' ) ) . '</p>'
-				. '<div class="ipb-demo-progress"><span></span></div>'
-				. '</div>';
-
 		case 'cursor':
 			return '<div class="ipb-demo ipb-demo--cursor" aria-hidden="true">'
 				. '<div class="ipb-cursor-ring"></div>'

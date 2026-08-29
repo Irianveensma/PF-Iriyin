@@ -620,26 +620,6 @@
 	color: var(--ipb-muted);
 }
 
-/* Konami-demo */
-.ipb-demo--konami { cursor: pointer; outline: none; transition: filter 0.25s ease; }
-.ipb-demo--konami:focus-visible { border-color: var(--ipb-chrome-mid); }
-.ipb-demo--konami.is-hit { filter: invert(1) hue-rotate(180deg); }
-.ipb-keycaps { display: flex; gap: 5px; flex-wrap: wrap; }
-.ipb-keycap {
-	font-family: 'JetBrains Mono', monospace;
-	font-size: 13px;
-	min-width: 26px;
-	text-align: center;
-	padding: 5px 6px;
-	border-radius: 5px;
-	border: 1px solid var(--ipb-hairline);
-	border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-	background: var(--ipb-surface-2);
-	color: var(--ipb-text);
-}
-.ipb-demo-progress { height: 3px; margin-top: 14px; background: rgba(255, 255, 255, 0.06); border-radius: 2px; overflow: hidden; }
-.ipb-demo-progress span { display: block; height: 100%; width: 0; background: var(--ipb-chrome-light); transition: width 0.12s ease; }
-
 /* Cursor-demo */
 .ipb-demo--cursor {
 	position: relative;

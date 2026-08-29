@@ -71,7 +71,7 @@ importeren. Bron: `panels-en.json` (NL: `panels.json`) in de scratchpad, plus
 - `inc/i18n.php` - NL/EN laag (`irian_lang`, `irian_str`, `irian_panels_data`,
   filters voor `<html lang>`, `<title>`-tagline en het `·`-scheidingsteken)
 - `inc/skill-visuals.php` - `irian_skill_visual()`, inline SVG per skill
-- `inc/module-demos.php` - `irian_module_demo()`, palette/konami/cursor/seo-report
+- `inc/module-demos.php` - `irian_module_demo()`, palette/cursor/seo-report
 - `inc/contact-form.php` - formulier, handler via `admin-post.php`, honeypot +
   tijd-check + `wp_mail()`, server-side ontvanger uit de contact-panel
 - `header.php` - nav (logo, links, taalpill, kbd-hint), `<html lang>`, favicon
@@ -80,7 +80,7 @@ importeren. Bron: `panels-en.json` (NL: `panels.json`) in de scratchpad, plus
 - `template-parts/panel-*.php` - front-end template per paneeltype
 - `assets/panels.css` - front-end panel-styling + `:root` tokens
 - `assets/site.css` - nav, footer, command palette, `.ipb-nav-tools`, `.ipb-lang`
-- `assets/site.js` - command palette, Konami-code, verborgen console-bericht,
+- `assets/site.js` - command palette, verborgen console-bericht,
   stack/modules interacties, `irianI18n`
 
 ## Sectie-ankers
@@ -92,6 +92,4 @@ importeren. Bron: `panels-en.json` (NL: `panels.json`) in de scratchpad, plus
 
 - Cmd+K / Ctrl+K: command palette. De knop in de nav opent 'm ook. Esc sluit,
   pijltjes plus Enter navigeren.
-- Konami-code (omhoog omhoog omlaag omlaag links rechts links rechts B A): korte
-  kleur-invert.
 - `console.log`: verborgen bericht voor wie de DevTools opent.

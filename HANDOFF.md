@@ -1,10 +1,10 @@
 # Handoff - Irian's portfoliowebsite (WordPress, lokaal via Local)
 
-Laatste update: 2026-08-28 (sessie 2). Dit document vervangt de vorige handoff en
+Laatste update: 2026-08-29 (sessie 2). Dit document vervangt de vorige handoff en
 beschrijft de volledige stand van zaken. Laatste sessie: de open follow-ups uit
 sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
-em-dashes uit de dev-docs, git-repo) plus de Platforms-copy verrijkt. Zie
-sectie 5c. Theme assets nu op `0.20.0`.
+em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, en de
+Konami-easter-egg volledig verwijderd. Zie sectie 5c. Theme assets nu op `0.21.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -234,7 +234,21 @@ bash wp.sh eval-file "C:/Users/IRIANV~1/AppData/Local/Temp/claude/import-panels-
 (Beide import-scripts staan in de scratchpad. Recreeren: `update_post_meta( 9,
 '_irian_panels' [of _en], json_decode( file_get_contents( '<pad>.json' ), true ) )`.)
 
-Theme-assetversie staat nu op `0.20.0` (4 plekken in `functions.php`).
+Theme-assetversie staat nu op `0.21.0` (4 plekken in `functions.php`).
+
+### Konami-easter-egg verwijderd
+
+Irian wilde 'm eruit, allebei de varianten:
+- Het verborgen globale toets-easter-egg in `site.js` (keydown-listener +
+  `filter: invert()` op de body) is weg.
+- De "Konami-code easter egg"-tegel in de Modules-sectie is weg (lab_grid-item
+  uit `_irian_panels` + `_irian_panels_en` + de JSON-bronnen). Modules heeft nu
+  5 tegels. `initKonamiDemo()`, `case 'konami'` in `module-demos.php`, de
+  `demo_konami_*` strings, de `konami`-optie in de admin-dropdown +
+  `$allowed_demo`, en het `.ipb-demo--konami` / `.ipb-keycap` CSS-blok zijn
+  allemaal verwijderd.
+
+Over: het `console.log`-easter-egg en de Cmd+K command palette.
 
 ---
 
@@ -365,11 +379,11 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.20.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.21.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill
-inc/module-demos.php      irian_module_demo() - palette/konami/cursor/seo-report, via irian_str()
+inc/module-demos.php      irian_module_demo() - palette/cursor/seo-report, via irian_str()
 inc/contact-form.php      irian_contact_form() + irian_handle_contact() + recipient
 header.php                nav (logo, links, taalpill, kbd-hint), <html lang>, favicon
 footer.php                footer + command-palette markup
@@ -385,7 +399,7 @@ template-parts/
 assets/
   panels.css             front-end panel-styling + :root tokens + .ipb-project-*
   site.css               nav / footer / palette / .ipb-nav-tools / .ipb-lang
-  site.js                ⌘K palette, Konami, console, stack/modules interacties, irianI18n
+  site.js                ⌘K palette, console-easter-egg, stack/modules interacties, irianI18n
   logo-mark.svg, favicon.svg, favicon-*.png, logo-full.svg
 README.md                thema-uitleg (dev-doc, herschreven sessie 2)
 ```
