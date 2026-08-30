@@ -1,6 +1,6 @@
 # Handoff - Irian's portfoliowebsite (WordPress, lokaal via Local)
 
-Laatste update: 2026-08-29 (sessie 3). Dit document vervangt de vorige handoff en
+Laatste update: 2026-08-30 (sessie 4). Dit document vervangt de vorige handoff en
 beschrijft de volledige stand van zaken. Sessie 2: de open follow-ups uit
 sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
 em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, de
@@ -9,9 +9,13 @@ hernoemd naar "Eigen WordPress-toolkit", en de opdrachtgever-namen uit de git-
 historie geschrobd. Zie sectie 5c. Sessie 3: git-remote gekoppeld en gepusht,
 Platforms sectie-intro gecorrigeerd, twee Modules-titels in lekentaal herschreven
 ("Custom cursor interactions" -> "Eigen cursor-effect", "Command palette
-component" -> "Snelmenu (⌘K)"), en "AI content generator" herschreven zodat
-'ie niet meer overlapt met Prompt Studio in Platforms. Zie sectie 5d. Theme
-assets nu op `0.21.0`.
+component" -> "Snelmenu (⌘K)"), "AI content generator" herschreven zodat
+'ie niet meer overlapt met Prompt Studio in Platforms, en de work-screenshots
+(Pedicure Paulina, Sita Design) opnieuw vastgelegd (banner weg, mobile
+overflow-fix). Zie sectie 5d. Sessie 4: elke Stack-tegel toont nu ook "waarom
+dit ertoe doet" naast de bestaande uitleg, en WordPress + Magento zijn
+samengevoegd tot één tegel "Content Management Systems" met WordPress/
+Magento 2 als sub-skills. Zie sectie 5e. Theme assets nu op `0.22.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -482,6 +486,70 @@ nieuwe tekst in beide talen, HTTP 200, debug.log leeg, JSON's nog geldig.
 
 ---
 
+## 5e. Sessie 4 (2026-08-30) - Stack: "waarom"-uitleg + CMS-tags samengevoegd
+
+### "Waarom dit ertoe doet" toegevoegd aan elke Stack-tegel
+
+Elke klikbare Stack-tag (WordPress, Magento, AI Development, SEO, HTML/CSS,
+JavaScript, PHP) toonde tot nu toe alleen een "note": wat de skill is. Irian
+wilde daarnaast, in hetzelfde paneel, een uitleg waarom die skill ertoe doet
+voor een bezoeker/opdrachtgever.
+
+- **Data-vorm uitgebreid:** elke tag krijgt een optioneel derde veld `why`
+  naast `label`/`note` (zie `template-parts/panel-stack.php` bovenaan).
+- **Template:** als `why` niet leeg is, verschijnt onder de bestaande note een
+  apart bloktje met een vast label ("Waarom dit ertoe doet" / "Why this
+  matters", nieuwe i18n-key `stack_why_label` in `inc/i18n.php`) en de
+  why-tekst.
+- **CSS:** `.ipb-stack-panel__why` (`assets/panels.css`), scheidingslijntje
+  boven de why-tekst, iets kleiner lettertype dan de note.
+- Content (7x NL + 7x EN) ingevuld via `update_post_meta()` op
+  `_irian_panels[1].data.tags[*].why` / `_irian_panels_en[1].data.tags[*].why`
+  (paneel-index 1 = `stack`), en gemirrored in `panels.json` / `panels-en.json`
+  (scratchpad content-bronnen, zie sectie 8).
+- Magento's `why`-tekst is op verzoek herschreven van een generieke
+  "waarom dit ertoe doet" naar een keuzegerichte framing ("waarom je voor een
+  Magento-shop zou kiezen"): wanneer WooCommerce tekortschiet, niet in
+  algemene termen.
+
+### WordPress + Magento samengevoegd tot "Content Management Systems"
+
+Twee losse tegels ("WordPress", "Magento") werden op verzoek samengevoegd tot
+één tegel "Content Management Systems", met WordPress en Magento 2 als
+sub-skills in hetzelfde paneel (Stack ging van 7 naar 6 tegels).
+
+- **Template ondersteunt nu een `children`-array** per tag (naast het
+  bestaande `note`/`why`-paar): een tag met `children` toont meerdere
+  sub-skills (elk met eigen icoon, label, note en why) in één paneel in plaats
+  van één losse note. Geëxtraheerd naar een kleine `$render_entry`-closure in
+  `panel-stack.php` zodat de visual+label+note+why-opmaak niet dubbel
+  hoeft (herbruikt voor zowel een los item als elk kind).
+- **CSS:** `.ipb-stack-panel--group` / `.ipb-stack-panel__item` (`panels.css`)
+  - stapelt de sub-skills verticaal met een scheidingslijn, elk sub-item
+  behoudt de bestaande 260px-visual + tekst grid-layout, met een mobiele
+  breakpoint (620px) net als de rest van het paneel-systeem.
+- **Iconen:** `inc/skill-visuals.php` had losse SVG's per skill-slug
+  ("wordpress", "magento"); het kind heet nu "Magento 2" (nieuwe slug
+  "magento-2"), dus een alias toegevoegd (`$map['magento-2'] = $map['magento'];`)
+  zodat hetzelfde icoon blijft resolven.
+- **Content:** WordPress-note aangevuld met "10+ jaar ervaring", Magento
+  2-note met "ongeveer een jaar ervaring" (ervaringsniveaus die Irian gaf).
+  De `why`-teksten van beide skills zijn ongewijzigd overgenomen als
+  kind-`why`. Aangepast via `update_post_meta()` op
+  `_irian_panels[1].data.tags` / `_irian_panels_en[1].data.tags` (WordPress- en
+  Magento-tag verwijderd, één samengevoegde tag met `children` ervoor in de
+  plaats), en gemirrored in `panels.json` / `panels-en.json`.
+- Asset-versie (CSS/JS cache-buster in `functions.php`) opgehoogd van
+  `0.21.0` naar `0.22.0` voor deze twee front-end wijzigingen samen.
+
+Geverifieerd: beide JSON-bronnen nog geldig (`json_decode`), curl op NL en EN
+geeft HTTP 200 en toont de nieuwe why-blokken en de samengevoegde CMS-tegel,
+debug.log leeg. Visueel gecontroleerd via de browser: klik op "Content
+Management Systems" toont WordPress en Magento 2 correct gestapeld, elk met
+eigen icoon en why-tekst.
+
+---
+
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
 
 Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
@@ -537,10 +605,11 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.21.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.22.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
-inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill
+inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
+                         magento-2 -> magento)
 inc/module-demos.php      irian_module_demo() - palette/cursor/seo-report, via irian_str()
 inc/contact-form.php      irian_contact_form() + irian_handle_contact() + recipient
 header.php                nav (logo, links, taalpill, kbd-hint), <html lang>, favicon

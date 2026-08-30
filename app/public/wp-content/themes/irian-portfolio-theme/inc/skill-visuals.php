@@ -119,6 +119,9 @@ function irian_skill_visual( $label ) {
 			<path d="M96 87c0 6 22 10 34 10s34-4 34-10"/>',
 	);
 
+	// Alias: "Magento 2" moet dezelfde tekening tonen als "Magento".
+	$map['magento-2'] = $map['magento'];
+
 	$slug = irian_skill_slug( $label );
 	if ( ! isset( $map[ $slug ] ) ) {
 		return '';

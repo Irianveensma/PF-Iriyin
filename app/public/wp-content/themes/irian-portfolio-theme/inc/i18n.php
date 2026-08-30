@@ -91,6 +91,7 @@ function irian_strings() {
 			'module_view'         => 'Bekijk',
 			'module_cue'          => 'Bekijk +',
 			'stack_aria'          => 'Stack',
+			'stack_why_label'     => 'Waarom dit ertoe doet',
 
 			'palette_placeholder' => 'Spring naar… (typ om te zoeken)',
 			'palette_search_aria' => 'Zoek een actie',
@@ -155,6 +156,7 @@ function irian_strings() {
 			'module_view'         => 'Open',
 			'module_cue'          => 'View +',
 			'stack_aria'          => 'Stack',
+			'stack_why_label'     => 'Why this matters',
 
 			'palette_placeholder' => 'Jump to… (type to search)',
 			'palette_search_aria' => 'Search for an action',
