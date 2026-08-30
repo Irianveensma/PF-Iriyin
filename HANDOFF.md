@@ -34,6 +34,11 @@ geen copy/fotografie-doorverwijzing meer, hosting-antwoord herschreven). Zie
 kleiner winkelwagentje; SEO: checklist met vinkjes; AI Development:
 prompt/antwoord-tafereel met een robotkopje als avatar). Theme assets nu op
 `0.28.0` (geen CSS/JS-wijziging in 5g, dus geen versiebump nodig geweest).
+Daarna (5h): de site is gemigreerd naar productie (iriyin.nl, oude content
+naar de prullenbak), en een echte bug gevonden en gefixt: de
+Stack-admin-editor was door eerdere sessie-wijzigingen (5e) stuk - de
+`why`-teksten en de CMS-groepering gingen verloren zodra je de metabox zelf
+opsloeg. Zie sectie 5h.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -852,6 +857,112 @@ visueel in de browser (ingezoomd).
   vervangen door een klein robotkopje (antenne, twee oogjes, mondlijntje) -
   een vriendelijker en herkenbaarder beeld voor "dit komt van AI" dan een
   generiek rondje.
+
+---
+
+## 5h. Sessie 4 vervolg: migratie naar iriyin.nl + kapotte Stack-admin-editor gerepareerd
+
+### Migratie naar productie (iriyin.nl)
+
+Irian had de WordPress-omgeving op iriyin.nl al klaarstaan (login via het
+account "irian"), met het verzoek om de site daarnaartoe te migreren. Op
+iriyin.nl bleek een oudere, eigen site te staan (thema "A.Studio Portfolio",
+7 berichten met menukaart-ontwerpen: "De Huuskamer", "Seafood", "Lyts
+begjin", "'t Luifeltje", enz.) - dit is expliciet gecheckt en aan Irian
+voorgelegd voordat er iets overschreven werd. Irian gaf akkoord: "Alles wat
+er nu staat mag weg."
+
+Uitgevoerd (alleen via de browser + de wp-admin login; geen SFTP/SSH
+beschikbaar):
+
+- `irian-portfolio-theme` als zip geüpload (Thema's > Toevoegen > Uploaden)
+  en geactiveerd. Let op bij het zippen: PowerShell's `Compress-Archive`
+  gebruikt backslashes als padscheiding in de zip-entries, wat op een
+  Linux-server tot een kapotte extractie kan leiden - de zip is daarom
+  handmatig gebouwd via `System.IO.Compression.ZipFile` met expliciet
+  geforceerde forward-slashes in de entry-namen.
+- Nieuwe pagina "Home" aangemaakt (post-ID **425** op iriyin.nl, niet 9 zoals
+  lokaal - het paneel-systeem is niet aan een vaste ID gebonden, de
+  `irian_panels_add_meta_box()`-metabox verschijnt op elke pagina), sjabloon
+  `page-home.php`, en ingesteld als statische voorpagina (Instellingen >
+  Lezen).
+- Media geüpload (`irian-veensma.png`, `pp-desktop.png`, `pp-mobile.png`,
+  `sd-desktop.png`, `sd-mobile.png`) via Media > Toevoegen. Nieuwe
+  attachment-ID's: 428/429/430/431/432 (was lokaal 18/19/20/21/22).
+- Content geïmporteerd via een **tijdelijk, eenmalig hulp-plugin**
+  (`irian-migrate/v1/set-panels`-REST-route, admin-only) omdat de
+  panels-metabox te bewerkelijk is om via de browser stap voor stap te
+  vullen: `panels.json`/`panels-en.json` (gecontroleerd tegen de live lokale
+  DB, functioneel identiek op wat lege standaardvelden na) met de nieuwe
+  media-ID's overgezet, gepost via curl met een tijdelijk Application
+  Password. Na gebruik: plugin gedeactiveerd + verwijderd, Application
+  Password ingetrokken via de REST API zelf (`DELETE
+  /wp/v2/users/me/application-passwords/<uuid>`, geverifieerd met een 401 op
+  een volgende call) - de "Intrekken"-knop in de wp-admin-UI zelf bleek een
+  blokkerende `confirm()`-dialoog te openen die de browser-automatisering
+  vastzette; de REST-route omzeilde dat probleem.
+- De 7 oude berichten naar de prullenbak verplaatst (bulk-actie, NIET
+  permanent verwijderd - terug te zetten via de Prullenbak-filter).
+- Oude thema's ("A.Studio Portfolio", "SiteOrigin North") laten staan maar
+  inactief; niet verwijderd.
+- "Zoekmachines ontmoedigen" staat nog aan (zelfde als op de oude site) -
+  bewust nog niet aangepast, dat is een bewuste ga-live-beslissing die aan
+  Irian is.
+
+Geverifieerd: curl op iriyin.nl (NL/EN) geeft HTTP 200, alle secties/media
+aanwezig, geen fatal errors/warnings in de HTML, en een Edge-headless
+screenshot van de volledige homepage bevestigt dat alles (hero-foto,
+work-cards, Platforms-kaarten, grid-achtergrond) correct rendert.
+
+### Stack-admin-editor was kapot: `why` en `children` gingen verloren bij opslaan
+
+Irian, terecht: "Ik heb in het begin gevraagd om een soort gelijke acf
+plugin helemaal custom gebouwd zodat ik per onderdeel van de website zelf
+alles later nog heel gemakkelijk kan bewerken. Dat is op het moment niet
+echt mogelijk." Uitgezocht en bevestigd: bij het toevoegen van de
+`why`-tekst en de CMS-groepering (`children`) aan de Stack-tags (sectie 5e)
+is de admin-metabox voor het `stack`-paneeltype nooit bijgewerkt. Die
+bestond nog uit de oorspronkelijke simpele textarea met alleen
+"Label :: uitleg"-parsing (`irian_stack_tags_to_text()` /
+inline-parsing in de sanitize-`case 'stack'`) - de `why`- en
+`children`-velden hadden geen enkel formulierveld, dus de sanitize-functie
+herbouwde `tags` bij elke "Bijwerken" alsof die velden niet bestonden. Bij
+zelf opslaan via de metabox waren de `why`-teksten en de
+WordPress/Magento/Headless-CMS-groepering stilletjes verdwenen.
+
+Opgelost door de textarea-notatie uit te breiden in plaats van een volledig
+nieuwe repeater-UI te bouwen (blijft consistent met hoe dit paneel altijd al
+werkte, en is voor Irian zelf te typen zonder code):
+
+- **`Label :: wat het is :: waarom dit ertoe doet`** - het derde `::`-deel
+  (why) is optioneel, zoals het tweede altijd al was.
+- **Groepen** (zoals "Content Management Systems"): een regel die eindigt op
+  `:` zonder `::` erin start een groep; de kind-regels erna beginnen met
+  `> ` en volgen dezelfde `Label :: wat :: waarom`-notatie. Zolang er geen
+  niet-`>`-regel tussenkomt blijven ze bij die groep horen.
+- `irian_stack_tags_to_text()` (metabox -> textarea) en de nieuwe
+  `irian_sanitize_stack_tags()` + `irian_parse_stack_line()` (textarea ->
+  opslaan) zijn losse, herbruikbare functies geworden (voorheen inline in de
+  switch-case) zodat ze los te testen zijn.
+- Het veld-label in de metabox is bijgewerkt om de nieuwe notatie uit te
+  leggen.
+
+**Geverifieerd met een echte round-trip-test tegen de actuele DB-data** (NL
++ EN): `irian_stack_tags_to_text()` op de huidige 6 tags (incl. de
+CMS-groep met 3 kinderen) -> tekst -> `irian_sanitize_stack_tags()` terug ->
+resultaat vergeleken met het origineel. Identiek, op een overbodige lege
+`why`-sleutel op het groep-item na (functioneel geen verschil, de
+template valt toch terug op `?? ''`). Dit dekt exact het codepad dat de
+metabox zelf gebruikt bij opslaan, dus dit is een echte bevestiging dat
+zelf-bewerken nu weer veilig kan - niet alleen een aanname.
+
+Alleen `functions.php` aangepast, geen wijziging aan `panel-stack.php`,
+CSS of de opgeslagen data zelf nodig (de data stond al in de juiste vorm;
+alleen het lees/schrijf-pad van de metabox was kapot). Nog te doen: deze fix
+ook naar iriyin.nl overzetten (het thema daar is de versie van vóór deze
+fix) en, breder, in het vervolg bij elke nieuwe paneel-datavelden ook
+meteen de bijbehorende metabox-UI bijwerken in plaats van er via losse
+scripts omheen te werken.
 
 ---
 

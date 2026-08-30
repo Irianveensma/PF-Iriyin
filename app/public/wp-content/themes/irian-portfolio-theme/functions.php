@@ -169,11 +169,14 @@ function irian_render_panel_fields( $type, $index, $data ) {
 
 		case 'stack':
 			irian_textarea_field(
-				'Tags (één per regel. Optioneel met uitleg: "WordPress :: korte uitleg". Dan wordt de tag klikbaar.)',
+				'Tags (één per regel). Klikbaar met uitleg: "Label :: wat het is" of '
+				. '"Label :: wat het is :: waarom dit ertoe doet". Groep van sub-skills '
+				. '(zoals Content Management Systems): een regel "Groepsnaam:" gevolgd door '
+				. 'kind-regels die met "> " beginnen, zelfde "Label :: wat :: waarom"-notatie.',
 				$index,
 				'data[tags_raw]',
 				irian_stack_tags_to_text( $data['tags'] ?? null ),
-				10
+				14
 			);
 			break;
 
@@ -573,17 +576,7 @@ function irian_sanitize_panel_data( $type, $data ) {
 			break;
 
 		case 'stack':
-			$out['tags'] = array();
-			foreach ( irian_lines_to_array( $data['tags_raw'] ?? '' ) as $line ) {
-				$parts = array_map( 'trim', explode( '::', $line, 2 ) );
-				if ( '' === $parts[0] ) {
-					continue;
-				}
-				$out['tags'][] = array(
-					'label' => sanitize_text_field( $parts[0] ),
-					'note'  => isset( $parts[1] ) ? sanitize_text_field( $parts[1] ) : '',
-				);
-			}
+			$out['tags'] = irian_sanitize_stack_tags( $data['tags_raw'] ?? '' );
 			break;
 
 		case 'work_grid':
@@ -701,8 +694,9 @@ function irian_lines_to_array( $raw ) {
 }
 
 /**
- * Stack-tags (array van ['label','note'] óf losse strings van oude data) terug
- * naar tekst voor de textarea: "Label :: uitleg" per regel.
+ * Stack-tags (array van ['label','note','why'?,'children'?] óf losse strings
+ * van oude data) terug naar tekst voor de textarea. Zie irian_parse_stack_line()
+ * voor de "Label :: wat :: waarom"-notatie en de groep-syntax ("Naam:" + "> "-regels).
  */
 function irian_stack_tags_to_text( $tags ) {
 	if ( ! is_array( $tags ) || empty( $tags ) ) {
@@ -710,15 +704,100 @@ function irian_stack_tags_to_text( $tags ) {
 	}
 	$lines = array();
 	foreach ( $tags as $tag ) {
-		if ( is_array( $tag ) ) {
-			$label = $tag['label'] ?? '';
-			$note  = $tag['note'] ?? '';
-			$lines[] = '' !== $note ? "{$label} :: {$note}" : $label;
-		} else {
+		if ( ! is_array( $tag ) ) {
 			$lines[] = (string) $tag;
+			continue;
+		}
+		$children = is_array( $tag['children'] ?? null ) ? $tag['children'] : array();
+		if ( $children ) {
+			$lines[] = ( $tag['label'] ?? '' ) . ':';
+			foreach ( $children as $child ) {
+				$lines[] = '> ' . irian_stack_line_to_text( $child );
+			}
+		} else {
+			$lines[] = irian_stack_line_to_text( $tag );
 		}
 	}
 	return implode( "\n", $lines );
+}
+
+/**
+ * Eén tag/kind (['label','note'?,'why'?]) naar "Label :: wat :: waarom".
+ */
+function irian_stack_line_to_text( $entry ) {
+	$label = $entry['label'] ?? '';
+	$note  = $entry['note'] ?? '';
+	$why   = $entry['why'] ?? '';
+	if ( '' !== $why ) {
+		return "{$label} :: {$note} :: {$why}";
+	}
+	if ( '' !== $note ) {
+		return "{$label} :: {$note}";
+	}
+	return $label;
+}
+
+/**
+ * Parseert één "Label :: wat :: waarom"-regel (2 of 3 delen, laatste optioneel)
+ * terug naar ['label','note','why'?]. Retourneert null bij een lege/ongeldige regel.
+ */
+function irian_parse_stack_line( $line ) {
+	$parts = array_map( 'trim', explode( '::', trim( $line ), 3 ) );
+	if ( '' === $parts[0] ) {
+		return null;
+	}
+	$entry = array(
+		'label' => sanitize_text_field( $parts[0] ),
+		'note'  => isset( $parts[1] ) ? sanitize_text_field( $parts[1] ) : '',
+	);
+	if ( isset( $parts[2] ) && '' !== $parts[2] ) {
+		$entry['why'] = sanitize_text_field( $parts[2] );
+	}
+	return $entry;
+}
+
+/**
+ * Parseert de volledige Stack-textarea (irian_stack_tags_to_text()'s notatie)
+ * terug naar de tags-array die het front-end (panel-stack.php) verwacht.
+ * Zie de veld-help bij de 'stack'-case in irian_render_panel_fields() voor de
+ * geldende notatie.
+ */
+function irian_sanitize_stack_tags( $raw ) {
+	$tags        = array();
+	$group_index = null;
+	foreach ( irian_lines_to_array( $raw ) as $line ) {
+		if ( '>' === substr( $line, 0, 1 ) ) {
+			if ( null === $group_index ) {
+				continue; // geen actieve groep, losse '>'-regel negeren.
+			}
+			$child = irian_parse_stack_line( substr( $line, 1 ) );
+			if ( null !== $child ) {
+				$tags[ $group_index ]['children'][] = $child;
+			}
+			continue;
+		}
+
+		if ( false === strpos( $line, '::' ) && ':' === substr( $line, -1 ) ) {
+			$label = trim( substr( $line, 0, -1 ) );
+			if ( '' === $label ) {
+				continue;
+			}
+			$tags[] = array(
+				'label'    => sanitize_text_field( $label ),
+				'note'     => '',
+				'children' => array(),
+			);
+			$group_index = count( $tags ) - 1;
+			continue;
+		}
+
+		$tag = irian_parse_stack_line( $line );
+		if ( null !== $tag ) {
+			$tags[] = $tag;
+		}
+		$group_index = null;
+	}
+	return $tags;
 }
 
 /* ---------- Admin assets (inline, no separate files needed) ---------- */
