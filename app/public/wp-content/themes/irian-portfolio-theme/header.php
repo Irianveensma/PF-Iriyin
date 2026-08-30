@@ -9,6 +9,8 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<div class="ipb-grid-bg" aria-hidden="true"><div class="ipb-grid-bg__sheen"></div></div>
+
 <a class="ipb-skip-link" href="#ipb-content"><?php echo esc_html( irian_str( 'skip' ) ); ?></a>
 
 <nav class="ipb-nav" id="top">

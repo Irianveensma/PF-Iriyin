@@ -17,8 +17,13 @@ dit ertoe doet" naast de bestaande uitleg, en WordPress + Magento zijn
 samengevoegd tot één tegel "Content Management Systems" met WordPress/
 Magento 2 als sub-skills, aangevuld met een derde sub-skill "Headless CMS"
 (eigen AI-portalen, losgetrokken van WordPress/Magento, verwijst naar de
-Nieuws Website) inclusief een eigen icoon. Zie sectie 5e. Theme assets nu op
-`0.23.0`.
+Nieuws Website) inclusief een eigen icoon, het Magento-winkelwagentje
+herontworpen (was onduidelijk), een puntennetwerk-achtergrond geprobeerd en
+weer teruggedraaid (te cliché) en vervangen door een blueprint-grid met
+sheen, de FAQ-sectie kreeg een eigen ondoorzichtige kaart-achtergrond zodat
+het raster niet meer door de tekst schijnt, en de accent-`border-left` op
+panelen/kaarten overal verwijderd (harde nieuwe eis, zie sectie 1). Zie
+sectie 5e. Theme assets nu op `0.24.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -55,6 +60,10 @@ verteld worden, in de Platforms-sectie (zie 5).
   server-side ontvanger van het formulier).
 - Donker palet behouden; de lichtere "plaat" achter secties is afgekeurd.
 - 3D alleen op de vier bloktypes hierboven, niet site-breed.
+- Nooit een gekleurde accent-`border-left` (zoals `border-left: 2px solid
+  var(--ipb-chrome-mid)`) op kaarten/panelen. Oogt volgens Irian "heel
+  AI-achtig". Verwijderd op 2026-08-30 uit `.ipb-stack-panel`,
+  `.ipb-module-panel` en de actieve staat van `.ipb-lab-tile--btn` (zie 5e).
 
 ---
 
@@ -611,6 +620,71 @@ wijziging aan `panel-stack.php` of CSS nodig. Geverifieerd: `php -l`, HTTP
 200, debug.log leeg, visueel in de browser (ingezoomd) - het karretje is nu
 in één oogopslag herkenbaar.
 
+### Animated background: eerst puntennetwerk (afgekeurd), toen blueprint-grid + sheen
+
+Irian wilde iets animated in de achtergrond. Eerste poging: een canvas met
+een driftend puntennetwerk (vanilla JS, zelfde stijl als het AI
+Development-icoontje). Direct afgekeurd: "Oh gedver niet dat. Dat is zo over
+gebruikt." (connected-dots/particle-achtergronden zijn inderdaad een bekende
+cliché). Volledig teruggedraaid met `git revert` (commit `fac8dd0`, revert
+van `863cfda`) in plaats van handmatig losse bestanden terug te zetten, om
+zeker te weten dat alle sporen (canvas-markup, CSS, JS, asset-versie,
+HANDOFF-tekst) in één keer weg waren.
+
+Op verzoek een van de twee eerder voorgestelde alternatieven laten zien:
+**blueprint-grid met sheen**. Puur CSS, geen JS:
+
+- Een fijn, stilstaand technisch rasterpatroon (`--ipb-hairline`-kleurige
+  1px-lijnen, 48px-grid) over de hele pagina.
+- Eén bewegend element: een zachte diagonale metaalglans
+  (`linear-gradient(115deg, ...)` op een 220%-grote, ietwat schuine strook)
+  die via `transform: translate()` heel traag (26s, ease-in-out) heen en
+  weer drijft. Alleen dit ene element animeert; het raster staat stil zodat
+  het rustig blijft.
+- `header.php`: `<div class="ipb-grid-bg" aria-hidden="true"><div
+  class="ipb-grid-bg__sheen"></div></div>` direct na `wp_body_open()`,
+  zelfde `position:fixed; z-index:-1`-aanpak als de eerdere (afgekeurde)
+  canvas-poging.
+- `prefers-reduced-motion: reduce` zet de sheen-animatie uit; het statische
+  raster blijft gewoon staan (geen beweging om te onderdrukken).
+
+Asset-versie 0.23.0 -> 0.24.0 (hergebruikt nummer na de revert). Geverifieerd:
+HTTP 200, debug.log leeg, visueel in de browser (ingezoomd raster zichtbaar,
+sheen-positie verschilt tussen twee screenshots na wachttijd). Irian's oordeel
+over déze versie stond aan het einde van deze sessie nog open.
+
+### Nooit meer: accent-`border-left` op kaarten/panelen
+
+Losstaande feedback, niet gekoppeld aan de achtergrond-taak hierboven: Irian
+gaf aan dat `border-left: 2px solid var(--ipb-chrome-mid)` als accent op
+kaarten/panelen "heel AI-achtig" oogt. Verwijderd uit drie plekken in
+`assets/panels.css`: `.ipb-stack-panel`, `.ipb-module-panel` (allebei
+hielden hun gewone `border: 1px solid var(--ipb-hairline)`), en de actieve
+staat van `.ipb-lab-tile--btn[aria-expanded="true"]` (die leunt nu volledig
+op de al bestaande cue-kleurverandering, geen vervangende rand toegevoegd).
+Ook vastgelegd als harde eis in sectie 1 en als memory (buiten dit
+repo, voor toekomstige sessies).
+
+### FAQ minder leesbaar door het nieuwe grid
+
+Direct gemeld: de FAQ-sectie (`.ipb-faq`) had, in tegenstelling tot de
+Work-, Platforms- en Modules-kaarten, nooit een eigen ondoorzichtige
+achtergrond - alleen een `border-top`/`border-bottom`-lijntje. Daardoor
+liepen de rasterlijnen van `.ipb-grid-bg` recht door de vraag/antwoord-tekst
+heen, wat de leesbaarheid duidelijk minder maakte dan bij de rest van de
+site.
+
+Fix: `.ipb-faq` kreeg dezelfde platte kaart-behandeling als
+`.ipb-stack-panel`/`.ipb-module-panel` (`background: var(--ipb-surface);
+border: 1px solid var(--ipb-hairline); border-radius: 14px; padding: 4px
+24px;`), zodat het raster er niet meer doorheen schijnt. `.ipb-faq-item`
+hield zijn `border-bottom`-scheidingslijntjes tussen vragen, met een
+`:last-child`-uitzondering zodat er geen dubbele rand tegen de onderkant
+van de kaart ontstaat. Geen wijziging aan `panel-faq.php` nodig. Geverifieerd:
+HTTP 200, debug.log leeg, visueel in de browser (FAQ-blok is nu een
+duidelijk afgebakende kaart, geen rasterlijnen meer zichtbaar achter de
+tekst).
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
@@ -668,7 +742,7 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.23.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.24.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
