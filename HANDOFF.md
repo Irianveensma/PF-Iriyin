@@ -28,8 +28,12 @@ harde `<details>`-snap. Zie sectie 5e. Vervolgens (5f): het contactformulier
 kreeg een eigen kaart-achtergrond, een zichtbare dropdown-chevron en een
 volledig custom "Type project"-dropdown i.p.v. het native browsermenu, en
 drie FAQ-antwoorden zijn tekstueel gecorrigeerd (geen beheer-overname meer,
-geen copy/fotografie-doorverwijzing meer, hosting-antwoord herschreven).
-Theme assets nu op `0.28.0`.
+geen copy/fotografie-doorverwijzing meer, hosting-antwoord herschreven). Zie
+5f. Tot slot (5g): Magento-, SEO- en AI Development-icoontjes herzien
+(Magento: één grote webshop-pagina i.p.v. drie productkaarten, plus een
+kleiner winkelwagentje; SEO: checklist met vinkjes; AI Development:
+prompt/antwoord-tafereel met een robotkopje als avatar). Theme assets nu op
+`0.28.0` (geen CSS/JS-wijziging in 5g, dus geen versiebump nodig geweest).
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -818,6 +822,36 @@ dezelfde tekst in `panels.json` / `panels-en.json`):
 
 Geverifieerd: beide JSON's geldig, curl op NL/EN toont de nieuwe teksten,
 "het overnemen van beheer" komt nergens meer voor, debug.log leeg.
+
+---
+
+## 5g. Sessie 4 vervolg: drie skill-iconen herzien
+
+Alle wijzigingen alleen in `inc/skill-visuals.php` ($map-entries), geen
+wijziging aan `panel-stack.php` of CSS. Steeds geverifieerd met `php -l` en
+visueel in de browser (ingezoomd).
+
+- **Magento**: van drie kleine productkaarten naar één grote webshop-pagina
+  ("magento mag gewoon een grote webshop image hebben"): een grote
+  productfoto (mini-bergje-icoon, zelfde motief als de foto-placeholder in
+  het WordPress-icoon) links, titelbalk + twee tekstregels + een
+  "koop"-knop rechts. Het winkelwagentje in de titelbalk (uit een eerdere
+  fix) bleef staan, maar is op verzoek ook kleiner gemaakt (was ademnauw de
+  hele titelbalk-hoogte, nu duidelijk compacter en met meer lucht eromheen).
+- **SEO**: van een zoekbalk-plus-resultaten-met-stijgende-grafiek-compositie
+  naar een simpele checklist: vier tekstregels met een klein vinkje ervoor
+  ("SEO kleine checkmarks naast teksten"), in een kaartje. Sluit inhoudelijk
+  aan bij de bestaande SEO-audit-tool-module (die ook een lijst met
+  afgevinkte checks toont).
+- **AI Development**: van een abstract neuraal-netwerk-diagram (cirkels +
+  verbindingslijnen) naar een concreet "prompt in, AI-antwoord uit"-tafereel:
+  een prompt-invoerveld met tekstcursor en een ronde verstuur-knop met pijl,
+  twee sparkle-accenten (kleine plusjes) voor de "AI-magie", en een
+  antwoordbubbel met tekstregels. Het antwoord-avatar was eerst een simpel
+  rondje met een plusje, op verzoek ("kun je er geen robotje bij doen?")
+  vervangen door een klein robotkopje (antenne, twee oogjes, mondlijntje) -
+  een vriendelijker en herkenbaarder beeld voor "dit komt van AI" dan een
+  generiek rondje.
 
 ---
 

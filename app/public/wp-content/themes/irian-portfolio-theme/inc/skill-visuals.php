@@ -46,22 +46,20 @@ function irian_skill_visual( $label ) {
 			<path d="M180 92l12-13 9 8 6-6 9 9"/>
 			<circle cx="192" cy="70" r="3.4"/>',
 
-		// Magento - webshop: productkaarten + winkelwagen.
+		// Magento - een grote webshop-pagina: productfoto + titel + koopknop.
 		'magento' => '
 			<rect x="16" y="16" width="228" height="118" rx="10"/>
 			<line x1="16" y1="40" x2="244" y2="40"/>
-			<path class="accent" d="M199 20h4l5 4"/>
-			<path class="accent" d="M208 24h22l-4 12h-14z"/>
-			<circle class="accent" cx="215" cy="37.5" r="1.6"/><circle class="accent" cx="223" cy="37.5" r="1.6"/>
-			<rect x="30" y="52" width="58" height="70" rx="4"/>
-			<rect x="38" y="60" width="42" height="30" rx="2"/>
-			<line x1="38" y1="100" x2="72" y2="100"/><line x1="38" y1="110" x2="62" y2="110"/>
-			<rect x="101" y="52" width="58" height="70" rx="4"/>
-			<rect x="109" y="60" width="42" height="30" rx="2"/>
-			<line x1="109" y1="100" x2="143" y2="100"/><line x1="109" y1="110" x2="133" y2="110"/>
-			<rect x="172" y="52" width="58" height="70" rx="4"/>
-			<rect x="180" y="60" width="42" height="30" rx="2"/>
-			<line x1="180" y1="100" x2="214" y2="100"/><line x1="180" y1="110" x2="204" y2="110"/>',
+			<path class="accent" d="M207 23h2l3 3"/>
+			<path class="accent" d="M212 26h14l-2 8h-10z"/>
+			<circle class="accent" cx="216" cy="35" r="1.1"/><circle class="accent" cx="222" cy="35" r="1.1"/>
+			<rect x="30" y="52" width="92" height="70" rx="6"/>
+			<circle cx="48" cy="66" r="4"/>
+			<path d="M38 108l14-16 11 10 8-8 13 14"/>
+			<rect class="accent" x="136" y="58" width="100" height="14" rx="3"/>
+			<line x1="136" y1="86" x2="224" y2="86"/>
+			<line x1="136" y1="98" x2="196" y2="98"/>
+			<rect class="accent" x="136" y="110" width="70" height="20" rx="10"/>',
 
 		// Headless CMS - content-API in het midden, losgetrokken van een vaste
 		// front-end: dezelfde content stroomt naar meerdere onafhankelijke schermen.
@@ -81,28 +79,39 @@ function irian_skill_visual( $label ) {
 			<rect class="accent" x="176" y="102" width="20" height="36" rx="2"/>
 			<circle cx="186" cy="142" r="1.6"/>',
 
-		// AI Development - prompt door een netwerk naar output.
+		// AI Development - prompt in, AI-antwoord (met avatar) terug, sparkles
+		// voor de magie ertussen.
 		'ai-development' => '
-			<circle cx="34" cy="75" r="11"/>
-			<circle cx="128" cy="38" r="9"/><circle cx="128" cy="75" r="9"/><circle cx="128" cy="112" r="9"/>
-			<circle class="accent" cx="224" cy="75" r="11"/>
-			<path d="M45 75l74-33M45 75h74M45 75l74 33"/>
-			<path d="M137 38l76 32M137 75h76M137 112l76-32"/>
-			<path class="accent" d="M224 52v-9M224 107v9M241 75h9M198 75h9"/>',
+			<rect x="18" y="24" width="150" height="34" rx="17"/>
+			<line x1="34" y1="41" x2="112" y2="41"/>
+			<line class="accent" x1="120" y1="33" x2="120" y2="49"/>
+			<circle class="accent" cx="150" cy="41" r="9"/>
+			<path class="accent" d="M145 41h7M148 37l4 4-4 4"/>
+			<line class="accent" x1="206" y1="16" x2="206" y2="32"/>
+			<line class="accent" x1="198" y1="24" x2="214" y2="24"/>
+			<line x1="228" y1="48" x2="228" y2="58"/>
+			<line x1="223" y1="53" x2="233" y2="53"/>
+			<rect x="54" y="84" width="166" height="42" rx="18"/>
+			<line x1="40" y1="88" x2="40" y2="95"/>
+			<circle class="accent" cx="40" cy="86" r="1.8"/>
+			<rect x="28" y="95" width="24" height="20" rx="6"/>
+			<circle class="accent" cx="35" cy="105" r="1.6"/><circle class="accent" cx="45" cy="105" r="1.6"/>
+			<line x1="34" y1="111" x2="46" y2="111"/>
+			<line x1="64" y1="99" x2="180" y2="99"/>
+			<line x1="64" y1="111" x2="150" y2="111"/>',
 
-		// SEO - zoekbalk + resultaten, bovenste stijgt.
+		// SEO - checklist: kleine vinkjes naast tekstregels (sluit aan bij de
+		// SEO-auditrapport-module).
 		'seo' => '
-			<rect x="16" y="16" width="228" height="26" rx="13"/>
-			<circle cx="34" cy="29" r="6"/><line x1="38.5" y1="33.5" x2="44" y2="39"/>
-			<path class="accent" d="M28 74l8-9 8 9"/>
-			<line class="accent" x1="36" y1="65" x2="36" y2="86"/>
-			<line class="accent" x1="58" y1="64" x2="150" y2="64"/>
-			<line x1="58" y1="76" x2="120" y2="76"/><line x1="58" y1="85" x2="104" y2="85"/>
-			<line x1="30" y1="104" x2="140" y2="104"/>
-			<line x1="30" y1="115" x2="110" y2="115"/><line x1="30" y1="124" x2="96" y2="124"/>
-			<path d="M198 120l12-12 12 12" class="accent"/>
-			<line x1="210" y1="108" x2="210" y2="60" class="accent"/>
-			<path d="M170 96h12v24h-12zM192 84h12v36h-12zM214 96h12v24h-12z"/>',
+			<rect x="16" y="16" width="228" height="118" rx="10"/>
+			<path d="M33 40l3 4l8-8"/>
+			<line x1="54" y1="40" x2="190" y2="40"/>
+			<path class="accent" d="M33 64l3 4l8-8"/>
+			<line class="accent" x1="54" y1="64" x2="210" y2="64"/>
+			<path d="M33 88l3 4l8-8"/>
+			<line x1="54" y1="88" x2="170" y2="88"/>
+			<path d="M33 112l3 4l8-8"/>
+			<line x1="54" y1="112" x2="200" y2="112"/>',
 
 		// HTML / CSS - code-tags + een layout-wireframe.
 		'html-css' => '
