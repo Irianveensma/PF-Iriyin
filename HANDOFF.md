@@ -17,7 +17,8 @@ dit ertoe doet" naast de bestaande uitleg, en WordPress + Magento zijn
 samengevoegd tot één tegel "Content Management Systems" met WordPress/
 Magento 2 als sub-skills, aangevuld met een derde sub-skill "Headless CMS"
 (eigen AI-portalen, losgetrokken van WordPress/Magento, verwijst naar de
-Nieuws Website). Zie sectie 5e. Theme assets nu op `0.23.0`.
+Nieuws Website) inclusief een eigen icoon. Zie sectie 5e. Theme assets nu op
+`0.23.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -556,9 +557,10 @@ Irian wilde daarnaast, los van WordPress/Magento, ook noemen dat hij met AI
 een eigen headless portaal bouwt (volledig losgetrokken van een bestaand CMS)
 - met de Nieuws Website (zie Platforms/5a) als voorbeeld. Toegevoegd als derde
 `children`-item onder de "Content Management Systems"-tag (naast WordPress en
-Magento 2), zelfde note/why-opbouw. Geen eigen icoon (geen entry in
-`inc/skill-visuals.php` voor "headless-cms"): de tekst valt zonder icoon terug
-op een lege linkerkolom.
+Magento 2), zelfde note/why-opbouw. In eerste instantie zonder eigen icoon
+(geen entry in `inc/skill-visuals.php` voor "headless-cms"): de tekst viel
+zonder icoon terug op een lege linkerkolom - later in dezelfde sessie alsnog
+een icoon toegevoegd, zie onder.
 
 **Layout-bug ontdekt en gefixt tijdens het testen:** zonder icoon viel de
 tekst (`.ipb-stack-panel__body`) in de eerste (icoon-)kolom van het
@@ -577,6 +579,23 @@ Content toegevoegd via `update_post_meta()` op
 beide JSON's geldig, curl op NL/EN toont de nieuwe tekst, debug.log leeg, en
 in de browser lijnt "Headless CMS" nu netjes uit onder WordPress/Magento 2
 (na de grid-fix).
+
+### Eigen icoon voor Headless CMS
+
+Irian vroeg alsnog om voor alle drie de CMS-sub-skills een eigen, verschillend
+plaatje (WordPress en Magento 2 hadden er al een, Headless CMS nog niet).
+Nieuwe SVG toegevoegd aan de `$map` in `inc/skill-visuals.php` onder key
+`headless-cms` (zelfde line-art-stijl: `currentColor`-lijnen, `class="accent"`
+voor het uitgelichte element, 260x150-viewBox): een `< >`-content/API-kern
+die met twee lijnen naar een los beeldscherm en een telefoon wijst - visueel
+het idee "één content-bron, meerdere onafhankelijke front-ends", in lijn met
+de note-tekst. Geen aparte aanpassing nodig aan `panel-stack.php` of de
+grid-fix van hierboven: die pakken de nieuwe visual automatisch op zodra
+`irian_skill_visual( 'Headless CMS' )` iets teruggeeft in plaats van `''`.
+
+Geverifieerd: `php -l` op het bestand, HTTP 200, debug.log leeg, en visueel
+in de browser klopt het icoon en staat het net als bij WordPress/Magento 2
+netjes in de linkerkolom.
 
 ---
 

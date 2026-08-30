@@ -62,6 +62,24 @@ function irian_skill_visual( $label ) {
 			<rect x="180" y="60" width="42" height="30" rx="2"/>
 			<line x1="180" y1="100" x2="214" y2="100"/><line x1="180" y1="110" x2="204" y2="110"/>',
 
+		// Headless CMS - content-API in het midden, losgetrokken van een vaste
+		// front-end: dezelfde content stroomt naar meerdere onafhankelijke schermen.
+		'headless-cms' => '
+			<rect x="20" y="40" width="68" height="70" rx="10"/>
+			<path class="accent" d="M40 62l-9 13 9 13"/>
+			<path class="accent" d="M68 62l9 13-9 13"/>
+			<circle cx="54" cy="75" r="3"/>
+			<circle cx="88" cy="58" r="2.4"/><circle cx="88" cy="92" r="2.4"/>
+			<path d="M88 58L146 46"/>
+			<path d="M88 92L170 118"/>
+			<rect x="146" y="24" width="80" height="54" rx="6"/>
+			<rect class="accent" x="154" y="32" width="64" height="32" rx="2"/>
+			<line x1="186" y1="78" x2="186" y2="88"/>
+			<line x1="170" y1="88" x2="202" y2="88"/>
+			<rect x="170" y="96" width="32" height="52" rx="6"/>
+			<rect class="accent" x="176" y="102" width="20" height="36" rx="2"/>
+			<circle cx="186" cy="142" r="1.6"/>',
+
 		// AI Development - prompt door een netwerk naar output.
 		'ai-development' => '
 			<circle cx="34" cy="75" r="11"/>
