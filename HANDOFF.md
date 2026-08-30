@@ -905,9 +905,9 @@ beschikbaar):
   permanent verwijderd - terug te zetten via de Prullenbak-filter).
 - Oude thema's ("A.Studio Portfolio", "SiteOrigin North") laten staan maar
   inactief; niet verwijderd.
-- "Zoekmachines ontmoedigen" staat nog aan (zelfde als op de oude site) -
-  bewust nog niet aangepast, dat is een bewuste ga-live-beslissing die aan
-  Irian is.
+- "Zoekmachines ontmoedigen": bewust niet door mij aangepast, dat is een
+  ga-live-beslissing die aan Irian is. Irian heeft dit inmiddels zelf
+  geregeld.
 
 Geverifieerd: curl op iriyin.nl (NL/EN) geeft HTTP 200, alle secties/media
 aanwezig, geen fatal errors/warnings in de HTML, en een Edge-headless
