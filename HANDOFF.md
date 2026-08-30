@@ -597,6 +597,20 @@ Geverifieerd: `php -l` op het bestand, HTTP 200, debug.log leeg, en visueel
 in de browser klopt het icoon en staat het net als bij WordPress/Magento 2
 netjes in de linkerkolom.
 
+### Magento-icoon: winkelwagentje herontworpen
+
+Irian gaf aan dat het karretje in het Magento-icoon "scuffed" was: het oude
+accent-path (`M214 24h6l3 12h12l-2 8h-11l1 4h9`) plus een los cirkeltje was
+geen herkenbare vorm, eerder een willekeurig lijntje. Vervangen door een
+duidelijk winkelwagentje opgebouwd uit drie simpele vormen (zelfde plek,
+rechtsboven in de titelbalk van het icoon): een handvat-hoekje, een
+trapezium-mandje (breder vanboven, smaller vanonder, zoals een echt
+winkelwagentje) en twee wieltjes als kleine cirkels eronder. Alleen
+`inc/skill-visuals.php` aangepast (de `'magento'`-entry in de `$map`), geen
+wijziging aan `panel-stack.php` of CSS nodig. Geverifieerd: `php -l`, HTTP
+200, debug.log leeg, visueel in de browser (ingezoomd) - het karretje is nu
+in één oogopslag herkenbaar.
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)

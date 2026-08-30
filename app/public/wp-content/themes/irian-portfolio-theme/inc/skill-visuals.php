@@ -50,8 +50,9 @@ function irian_skill_visual( $label ) {
 		'magento' => '
 			<rect x="16" y="16" width="228" height="118" rx="10"/>
 			<line x1="16" y1="40" x2="244" y2="40"/>
-			<path class="accent" d="M214 24h6l3 12h12l-2 8h-11l1 4h9"/>
-			<circle class="accent" cx="222" cy="31" r="1.6"/>
+			<path class="accent" d="M199 20h4l5 4"/>
+			<path class="accent" d="M208 24h22l-4 12h-14z"/>
+			<circle class="accent" cx="215" cy="37.5" r="1.6"/><circle class="accent" cx="223" cy="37.5" r="1.6"/>
 			<rect x="30" y="52" width="58" height="70" rx="4"/>
 			<rect x="38" y="60" width="42" height="30" rx="2"/>
 			<line x1="38" y1="100" x2="72" y2="100"/><line x1="38" y1="110" x2="62" y2="110"/>
