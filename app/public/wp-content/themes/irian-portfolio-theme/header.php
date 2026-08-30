@@ -9,6 +9,8 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<canvas class="ipb-net-bg" id="ipb-net-bg" aria-hidden="true"></canvas>
+
 <a class="ipb-skip-link" href="#ipb-content"><?php echo esc_html( irian_str( 'skip' ) ); ?></a>
 
 <nav class="ipb-nav" id="top">

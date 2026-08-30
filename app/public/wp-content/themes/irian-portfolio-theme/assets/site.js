@@ -139,6 +139,111 @@
 
 	} )();
 
+	/* ---------- Ambient netwerk-achtergrond: rustig driftend puntenpatroon ---------- */
+	( function initNetworkBg() {
+		var canvas = document.getElementById( 'ipb-net-bg' );
+		if ( ! canvas || ! canvas.getContext ) { return; }
+		if ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) { return; }
+
+		var ctx = canvas.getContext( '2d' );
+		var dpr = Math.min( window.devicePixelRatio || 1, 2 );
+		var w = 0, h = 0, nodes = [], raf = null, running = false;
+		var linkDist = 140;
+
+		function hexToRgb( hex ) {
+			hex = ( hex || '' ).trim().replace( '#', '' );
+			if ( hex.length === 3 ) { hex = hex.split( '' ).map( function ( c ) { return c + c; } ).join( '' ); }
+			var num = parseInt( hex, 16 );
+			return isNaN( num ) ? { r: 167, g: 171, b: 179 } : { r: ( num >> 16 ) & 255, g: ( num >> 8 ) & 255, b: num & 255 };
+		}
+		// Zelfde grijs als --ipb-chrome-mid, zodat de kleur meebeweegt met het palet.
+		var rgb = hexToRgb( getComputedStyle( document.documentElement ).getPropertyValue( '--ipb-chrome-mid' ) );
+
+		function seed() {
+			var count = Math.round( Math.min( 70, Math.max( 18, ( w * h ) / 16000 ) ) );
+			nodes = [];
+			for ( var i = 0; i < count; i++ ) {
+				nodes.push( {
+					x: Math.random() * w,
+					y: Math.random() * h,
+					vx: ( Math.random() - 0.5 ) * 0.18,
+					vy: ( Math.random() - 0.5 ) * 0.18
+				} );
+			}
+		}
+
+		function resize() {
+			w = window.innerWidth;
+			h = window.innerHeight;
+			canvas.width = w * dpr;
+			canvas.height = h * dpr;
+			canvas.style.width = w + 'px';
+			canvas.style.height = h + 'px';
+			ctx.setTransform( dpr, 0, 0, dpr, 0, 0 );
+			seed();
+		}
+
+		function tick() {
+			ctx.clearRect( 0, 0, w, h );
+			var i, j, n;
+
+			for ( i = 0; i < nodes.length; i++ ) {
+				n = nodes[ i ];
+				n.x += n.vx;
+				n.y += n.vy;
+				if ( n.x < 0 || n.x > w ) { n.vx *= -1; n.x = Math.max( 0, Math.min( w, n.x ) ); }
+				if ( n.y < 0 || n.y > h ) { n.vy *= -1; n.y = Math.max( 0, Math.min( h, n.y ) ); }
+			}
+
+			ctx.lineWidth = 1;
+			for ( i = 0; i < nodes.length; i++ ) {
+				for ( j = i + 1; j < nodes.length; j++ ) {
+					var a = nodes[ i ], b = nodes[ j ];
+					var dx = a.x - b.x, dy = a.y - b.y;
+					var dist = Math.sqrt( dx * dx + dy * dy );
+					if ( dist < linkDist ) {
+						ctx.strokeStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + ( 0.14 * ( 1 - dist / linkDist ) ) + ')';
+						ctx.beginPath();
+						ctx.moveTo( a.x, a.y );
+						ctx.lineTo( b.x, b.y );
+						ctx.stroke();
+					}
+				}
+			}
+
+			ctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.45)';
+			for ( i = 0; i < nodes.length; i++ ) {
+				ctx.beginPath();
+				ctx.arc( nodes[ i ].x, nodes[ i ].y, 1.6, 0, Math.PI * 2 );
+				ctx.fill();
+			}
+
+			if ( running ) { raf = requestAnimationFrame( tick ); }
+		}
+
+		function start() {
+			if ( running ) { return; }
+			running = true;
+			raf = requestAnimationFrame( tick );
+		}
+		function stop() {
+			running = false;
+			if ( raf ) { cancelAnimationFrame( raf ); raf = null; }
+		}
+
+		var resizeTimer = null;
+		window.addEventListener( 'resize', function () {
+			clearTimeout( resizeTimer );
+			resizeTimer = setTimeout( resize, 200 );
+		} );
+		document.addEventListener( 'visibilitychange', function () {
+			if ( document.hidden ) { stop(); } else { start(); }
+		} );
+
+		resize();
+		start();
+	} )();
+
 	/* ---------- Command palette ---------- */
 	var root = document.getElementById( 'ipb-cmdk' );
 	if ( ! root ) { return; }
