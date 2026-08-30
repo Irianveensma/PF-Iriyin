@@ -139,6 +139,70 @@
 
 	} )();
 
+	/* ---------- FAQ: vloeiend open/dicht in plaats van de harde <details>-snap ---------- */
+	( function initFaqAccordion() {
+		var items = Array.prototype.slice.call( document.querySelectorAll( '.ipb-faq-item' ) );
+		if ( ! items.length ) { return; }
+		if ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) { return; }
+		if ( ! items[ 0 ].animate ) { return; } // geen Web Animations API -> native <details>-gedrag laten staan.
+
+		items.forEach( function ( item ) {
+			var summary = item.querySelector( 'summary' );
+			var animation = null;
+			var isClosing = false;
+			var isExpanding = false;
+
+			summary.addEventListener( 'click', function ( e ) {
+				e.preventDefault();
+				item.style.overflow = 'hidden';
+				if ( isClosing || ! item.open ) {
+					openItem();
+				} else if ( isExpanding || item.open ) {
+					shrink();
+				}
+			} );
+
+			function openItem() {
+				item.style.height = item.offsetHeight + 'px';
+				item.open = true;
+				requestAnimationFrame( expand );
+			}
+
+			function expand() {
+				isExpanding = true;
+				var startHeight = item.offsetHeight + 'px';
+				var endHeight = summary.offsetHeight + item.querySelector( '.ipb-faq-answer' ).offsetHeight + 'px';
+				runAnimation( startHeight, endHeight, true );
+			}
+
+			function shrink() {
+				isClosing = true;
+				var startHeight = item.offsetHeight + 'px';
+				var endHeight = summary.offsetHeight + 'px';
+				runAnimation( startHeight, endHeight, false );
+			}
+
+			function runAnimation( startHeight, endHeight, opening ) {
+				if ( animation ) { animation.cancel(); }
+				animation = item.animate(
+					{ height: [ startHeight, endHeight ] },
+					{ duration: 240, easing: 'ease-out' }
+				);
+				animation.onfinish = function () { onFinish( opening ); };
+				animation.oncancel = function () { isClosing = false; isExpanding = false; };
+			}
+
+			function onFinish( opening ) {
+				item.open = opening;
+				animation = null;
+				isClosing = false;
+				isExpanding = false;
+				item.style.height = '';
+				item.style.overflow = '';
+			}
+		} );
+	} )();
+
 	/* ---------- Command palette ---------- */
 	var root = document.getElementById( 'ipb-cmdk' );
 	if ( ! root ) { return; }

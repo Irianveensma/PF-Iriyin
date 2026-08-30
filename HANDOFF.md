@@ -21,9 +21,10 @@ Nieuws Website) inclusief een eigen icoon, het Magento-winkelwagentje
 herontworpen (was onduidelijk), een puntennetwerk-achtergrond geprobeerd en
 weer teruggedraaid (te cliché) en vervangen door een blueprint-grid met
 sheen, de FAQ-sectie kreeg een eigen ondoorzichtige kaart-achtergrond zodat
-het raster niet meer door de tekst schijnt, en de accent-`border-left` op
-panelen/kaarten overal verwijderd (harde nieuwe eis, zie sectie 1). Zie
-sectie 5e. Theme assets nu op `0.24.0`.
+het raster niet meer door de tekst schijnt, de accent-`border-left` op
+panelen/kaarten overal verwijderd (harde nieuwe eis, zie sectie 1), en de
+FAQ-accordion opent/sluit nu vloeiend (Web Animations API) in plaats van de
+harde `<details>`-snap. Zie sectie 5e. Theme assets nu op `0.25.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -685,6 +686,34 @@ HTTP 200, debug.log leeg, visueel in de browser (FAQ-blok is nu een
 duidelijk afgebakende kaart, geen rasterlijnen meer zichtbaar achter de
 tekst).
 
+### FAQ: vloeiend open/dicht in plaats van de harde `<details>`-snap
+
+Irian: "Veel gestelde vragen mag wel een vloeiende flow krijgen als je de
+kaarten opent." Native `<details>`/`<summary>` toont/verbergt de inhoud
+instant (`display` springt om), geen enkele CSS-transition kan dat gladstrijken
+zonder hulp van JS (`height: auto` is niet animeerbaar).
+
+Opgelost met de gangbare geanimeerde-`<details>`-techniek (Web Animations
+API): `initFaqAccordion()` in `assets/site.js` onderschept de klik op
+`summary`, animeert de hoogte van het hele `<details>`-element (dus
+summary + antwoord samen) van de huidige naar de doelhoogte via
+`element.animate({ height: [...] }, { duration: 240, easing: 'ease-out' })`,
+met `overflow: hidden` tijdens de animatie zodat de inhoud netjes afgeknipt
+wordt terwijl hij in-/uitschuift. Bij openen wordt `open = true` gezet vóór
+de animatie start (zodat de content meetbaar/zichtbaar is om naartoe te
+animeren); bij sluiten pas ná afloop. Native semantiek (toetsenbord,
+schermlezers, `open`-attribuut) blijft intact, er verandert niets aan
+`panel-faq.php` of de bestaande CSS.
+
+Valt terug op het normale, instante `<details>`-gedrag (geen JS-binding) bij
+`prefers-reduced-motion: reduce` of als de browser geen
+`Element.prototype.animate` heeft. Asset-versie 0.24.0 -> 0.25.0.
+Geverifieerd: `node -c` schoon, HTTP 200, debug.log leeg, visueel in de
+browser: bij openen is de tekst kort geclipt terwijl de hoogte nog aan het
+groeien is (bevestigt dat de animatie echt draait, geen instant-snap), bij
+sluiten idem in omgekeerde richting, en het `+`/`×`-icoontje synchroniseert
+nog steeds correct met de open-staat.
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
@@ -742,7 +771,7 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.24.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.25.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
