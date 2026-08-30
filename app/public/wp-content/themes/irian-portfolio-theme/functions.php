@@ -32,16 +32,16 @@ add_action( 'after_setup_theme', 'irian_theme_setup' );
  * Enqueue front-end styles and fonts.
  */
 function irian_enqueue_assets() {
-	wp_enqueue_style( 'irian-style', get_stylesheet_uri(), array(), '0.24.0' );
-	wp_enqueue_style( 'irian-panels', get_template_directory_uri() . '/assets/panels.css', array(), '0.24.0' );
-	wp_enqueue_style( 'irian-site', get_template_directory_uri() . '/assets/site.css', array( 'irian-panels' ), '0.24.0' );
+	wp_enqueue_style( 'irian-style', get_stylesheet_uri(), array(), '0.23.0' );
+	wp_enqueue_style( 'irian-panels', get_template_directory_uri() . '/assets/panels.css', array(), '0.23.0' );
+	wp_enqueue_style( 'irian-site', get_template_directory_uri() . '/assets/site.css', array( 'irian-panels' ), '0.23.0' );
 	wp_enqueue_style(
 		'irian-fonts',
 		'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap',
 		array(),
 		null
 	);
-	wp_enqueue_script( 'irian-site', get_template_directory_uri() . '/assets/site.js', array(), '0.24.0', true );
+	wp_enqueue_script( 'irian-site', get_template_directory_uri() . '/assets/site.js', array(), '0.23.0', true );
 
 	wp_localize_script(
 		'irian-site',

@@ -17,10 +17,8 @@ dit ertoe doet" naast de bestaande uitleg, en WordPress + Magento zijn
 samengevoegd tot één tegel "Content Management Systems" met WordPress/
 Magento 2 als sub-skills, aangevuld met een derde sub-skill "Headless CMS"
 (eigen AI-portalen, losgetrokken van WordPress/Magento, verwijst naar de
-Nieuws Website) inclusief een eigen icoon, het Magento-winkelwagentje
-herontworpen (was onduidelijk), en een animated achtergrond toegevoegd: een
-rustig driftend puntennetwerk (canvas, vanilla JS) in dezelfde stijl als het
-AI Development-icoon. Zie sectie 5e. Theme assets nu op `0.24.0`.
+Nieuws Website) inclusief een eigen icoon. Zie sectie 5e. Theme assets nu op
+`0.23.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -613,44 +611,6 @@ wijziging aan `panel-stack.php` of CSS nodig. Geverifieerd: `php -l`, HTTP
 200, debug.log leeg, visueel in de browser (ingezoomd) - het karretje is nu
 in één oogopslag herkenbaar.
 
-### Animated background: driftend puntennetwerk
-
-Irian wilde iets animated in de achtergrond. Voorgesteld en gekozen (via
-AskUserQuestion): een rustig zwevend puntennetwerk (dunne lijntjes tussen
-nabije punten, constante trage drift) in dezelfde visuele taal als het AI
-Development-icoontje (`inc/skill-visuals.php`) - past bij de "AI-gedreven
-tools"-positionering en het gunmetal/chroom-palet (geen neon, zoals de harde
-eis in sectie 1 voorschrijft).
-
-Gebouwd als vanilla-JS canvas-laag, geen library (zelfde stijl als de
-cursor-effect-demo in Modules):
-
-- **`header.php`:** `<canvas id="ipb-net-bg" class="ipb-net-bg" aria-hidden="true">`
-  direct na `wp_body_open()`, vóór alle andere content.
-- **`assets/site.css`:** `.ipb-net-bg` - `position: fixed; inset: 0;
-  z-index: -1; pointer-events: none;`. Negatieve z-index (niet 0!) is
-  bewust: een positioned element met `z-index:0` schildert normaliter BOVEN
-  niet-gepositioneerde content, ongeacht DOM-volgorde - `-1` legt 'm juist
-  onder de rest van de pagina, boven de bestaande body-gradient.
-- **`assets/site.js` (`initNetworkBg`):** canvas geschaald op
-  `devicePixelRatio` (max 2x), aantal punten schaalt met viewport-oppervlak
-  (18-70), elk punt drift met een vaste kleine snelheid en kaatst terug bij
-  de randen. Elk frame: lijnen tussen punten binnen ~140px, dunner/vager
-  naarmate de afstand groter is. Kleur direct uit `--ipb-chrome-mid`
-  (`getComputedStyle`) gelezen, zodat de tint automatisch meebeweegt met het
-  palet in plaats van een losstaande hex-waarde.
-- **Performance/toegankelijkheid:** stopt volledig bij
-  `prefers-reduced-motion: reduce` (geen canvas-init, geen animatie, zelfde
-  patroon als de bestaande reduced-motion-regel op de stack-panel-animatie);
-  pauzeert de rAF-loop op `visibilitychange` (tab niet zichtbaar); resize
-  gedebounced (200ms). O(n²) voor de lijn-afstandschecks, maar bij max 70
-  punten (~2400 paren) triviaal voor 60fps.
-
-Asset-versie 0.23.0 -> 0.24.0. Geverifieerd: `node -c` op `site.js` schoon,
-HTTP 200 op NL/EN, debug.log leeg, visueel in de browser (canvas laag ligt
-correct achter nav/hero/cards, blijft vast staan tijdens scrollen net als de
-body-gradient, punten zijn zichtbaar in beweging tussen twee screenshots).
-
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
@@ -708,15 +668,14 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.24.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.23.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
                          magento-2 -> magento)
 inc/module-demos.php      irian_module_demo() - palette/cursor/seo-report, via irian_str()
 inc/contact-form.php      irian_contact_form() + irian_handle_contact() + recipient
-header.php                nav (logo, links, taalpill, kbd-hint), <html lang>, favicon,
-                         #ipb-net-bg canvas (animated achtergrond)
+header.php                nav (logo, links, taalpill, kbd-hint), <html lang>, favicon
 footer.php                footer + command-palette markup
 page-home.php             leest irian_panels_data() en rendert de panels
 template-parts/
@@ -729,9 +688,8 @@ template-parts/
   panel-contact.php       CTA + formulier
 assets/
   panels.css             front-end panel-styling + :root tokens + .ipb-project-*
-  site.css               nav / footer / palette / .ipb-nav-tools / .ipb-lang / .ipb-net-bg
-  site.js                ⌘K palette, console-easter-egg, stack/modules interacties,
-                         initNetworkBg (canvas-achtergrond), irianI18n
+  site.css               nav / footer / palette / .ipb-nav-tools / .ipb-lang
+  site.js                ⌘K palette, console-easter-egg, stack/modules interacties, irianI18n
   logo-mark.svg, favicon.svg, favicon-*.png, logo-full.svg
 README.md                thema-uitleg (dev-doc, herschreven sessie 2)
 ```
