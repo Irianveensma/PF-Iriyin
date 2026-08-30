@@ -340,7 +340,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.ipb-stack-panel { animation: none; }
+	.ipb-stack-panel, .ipb-module-panel, .ipb-form-msg, .ipb-select-list { animation: none; }
 }
 
 /* Work grid */
@@ -782,7 +782,15 @@
 .ipb-contact-cta { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 4vw, 40px); font-weight: 600; max-width: 560px; }
 
 /* Contactformulier */
-.ipb-form { max-width: 620px; margin-top: 44px; }
+.ipb-form {
+	max-width: 620px;
+	margin-top: 44px;
+	background: var(--ipb-surface);
+	border: 1px solid var(--ipb-hairline);
+	border-radius: 16px;
+	padding: 30px 28px 32px;
+}
+@media (max-width: 560px) { .ipb-form { padding: 24px 20px 26px; } }
 .ipb-form-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .ipb-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 560px) { .ipb-form-row { grid-template-columns: 1fr; } }
@@ -818,7 +826,87 @@
 	outline: none;
 	border-color: var(--ipb-chrome-mid);
 }
-.ipb-form-field select { appearance: none; cursor: pointer; }
+.ipb-form-field select {
+	appearance: none;
+	cursor: pointer;
+	padding-right: 38px;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23a7abb3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+	background-size: 14px;
+}
+
+/* Custom dropdown die de native <select> vervangt (assets/site.js,
+   initCustomSelect). De native select blijft in de DOM als bron van waarheid
+   + no-JS fallback (dan gewoon het gestylede maar native menu hierboven);
+   zodra JS 'm verrijkt krijgt hij .ipb-select-native en wordt hij onzichtbaar. */
+.ipb-select { position: relative; }
+/* !important: wint van de bredere .ipb-form-field select-regel hierboven
+   (width/padding), zonder een specificity-truc nodig te hebben. */
+.ipb-select-native {
+	position: absolute;
+	width: 1px !important;
+	height: 1px;
+	padding: 0 !important;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+.ipb-select-trigger {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	font-family: 'Inter', sans-serif;
+	font-size: 15px;
+	text-align: left;
+	color: var(--ipb-text);
+	background: var(--ipb-well);
+	border: 1px solid rgba(0, 0, 0, 0.6);
+	border-bottom-color: rgba(255, 255, 255, 0.09);
+	border-radius: 8px;
+	padding: 12px 14px;
+	box-shadow: var(--ipb-inset-shadow-sm, inset 0 2px 4px rgba(0, 0, 0, 0.5));
+	cursor: pointer;
+	transition: border-color 0.15s ease;
+}
+.ipb-select-trigger:focus-visible,
+.ipb-select-trigger[aria-expanded="true"] { outline: none; border-color: var(--ipb-chrome-mid); }
+.ipb-select-chevron { flex: none; display: flex; color: var(--ipb-chrome-mid); transition: transform 0.15s ease; }
+.ipb-select-trigger[aria-expanded="true"] .ipb-select-chevron { transform: rotate(180deg); }
+
+.ipb-select-list {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: calc(100% + 6px);
+	z-index: 20;
+	list-style: none;
+	margin: 0;
+	padding: 6px;
+	background: var(--ipb-surface-2);
+	border: 1px solid var(--ipb-hairline);
+	border-radius: 10px;
+	box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+	max-height: 240px;
+	overflow-y: auto;
+	animation: ipb-stack-in 0.14s ease-out;
+}
+.ipb-select-list[hidden] { display: none; }
+.ipb-select-option {
+	padding: 9px 12px;
+	border-radius: 7px;
+	font-size: 14px;
+	color: var(--ipb-muted);
+	cursor: pointer;
+}
+.ipb-select-option:hover,
+.ipb-select-option:focus,
+.ipb-select-option.is-active { background: rgba(255, 255, 255, 0.06); color: var(--ipb-text); outline: none; }
+.ipb-select-option[aria-selected="true"] { color: var(--ipb-text); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ipb-select-option[aria-selected="true"]::after { content: '✓'; color: var(--ipb-chrome-mid); }
 .ipb-form-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
 .ipb-form-actions .ipb-btn { cursor: pointer; }
 .ipb-form-note { font-size: 12px; color: var(--ipb-muted-2); }
@@ -827,6 +915,7 @@
 	border-radius: 8px;
 	font-size: 14px;
 	margin-bottom: 20px;
+	animation: ipb-stack-in 0.18s ease-out;
 }
 .ipb-form-msg.is-ok { background: rgba(120, 200, 150, 0.12); border: 1px solid rgba(120, 200, 150, 0.3); color: #b6e6c8; }
 .ipb-form-msg.is-err { background: rgba(220, 120, 120, 0.12); border: 1px solid rgba(220, 120, 120, 0.3); color: #e6b0b0; }

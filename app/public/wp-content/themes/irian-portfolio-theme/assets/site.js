@@ -203,6 +203,160 @@
 		} );
 	} )();
 
+	/* ---------- Contactformulier: custom dropdown i.p.v. het native <select>-menu ---------- */
+	( function initCustomSelect() {
+		var selects = Array.prototype.slice.call( document.querySelectorAll( '.ipb-form-field select' ) );
+		if ( ! selects.length ) { return; }
+
+		selects.forEach( function ( select ) {
+			// Een <label> met meerdere labelable descendants (de native select
+			// EN straks onze eigen trigger-knop) forwardt een klik op andere
+			// inhoud daarbinnen (de listbox-items, of het label-tekstje zelf)
+			// automatisch ook naar de eerste labelable control. Dat opent het
+			// menu meteen weer nadat selectOption() het net gesloten heeft.
+			// Fix: het omringende <label> vervangen door een gewone <div>;
+			// aria-labelledby hieronder herstelt de koppeling voor schermlezers.
+			var field = select.closest( '.ipb-form-field' );
+			if ( field && 'LABEL' === field.tagName ) {
+				var div = document.createElement( 'div' );
+				div.className = field.className;
+				while ( field.firstChild ) { div.appendChild( field.firstChild ); }
+				field.parentNode.replaceChild( div, field );
+				field = div;
+			}
+
+			var wrap = document.createElement( 'div' );
+			wrap.className = 'ipb-select';
+			select.parentNode.insertBefore( wrap, select );
+
+			var uid = 'ipb-select-' + Math.random().toString( 36 ).slice( 2, 8 );
+
+			var trigger = document.createElement( 'button' );
+			trigger.type = 'button';
+			trigger.className = 'ipb-select-trigger';
+			trigger.setAttribute( 'aria-haspopup', 'listbox' );
+			trigger.setAttribute( 'aria-expanded', 'false' );
+			trigger.setAttribute( 'aria-controls', uid );
+			trigger.innerHTML =
+				'<span class="ipb-select-value"></span>' +
+				'<span class="ipb-select-chevron" aria-hidden="true">' +
+				'<svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg>' +
+				'</span>';
+
+			var list = document.createElement( 'ul' );
+			list.className = 'ipb-select-list';
+			list.setAttribute( 'role', 'listbox' );
+			list.id = uid;
+			list.hidden = true;
+
+			var options = Array.prototype.slice.call( select.options ).map( function ( opt ) {
+				var li = document.createElement( 'li' );
+				li.className = 'ipb-select-option';
+				li.setAttribute( 'role', 'option' );
+				li.setAttribute( 'data-value', opt.value );
+				li.tabIndex = -1;
+				li.textContent = opt.textContent;
+				if ( opt.selected ) { li.setAttribute( 'aria-selected', 'true' ); }
+				list.appendChild( li );
+				return li;
+			} );
+
+			wrap.appendChild( trigger );
+			wrap.appendChild( list );
+			wrap.appendChild( select );
+			select.classList.add( 'ipb-select-native' );
+			select.setAttribute( 'tabindex', '-1' );
+			select.setAttribute( 'aria-hidden', 'true' );
+
+			var valueEl = trigger.querySelector( '.ipb-select-value' );
+			valueEl.textContent = ( select.options[ select.selectedIndex ] || {} ).textContent || '';
+
+			// Herstel de label-koppeling die verloren ging toen het <label> een <div>
+			// werd: klik op het label-tekstje opent de trigger, en aria-labelledby
+			// zorgt dat schermlezers 'm nog steeds "Type project" noemen.
+			var labelSpan = field ? field.querySelector( 'span' ) : null;
+			if ( labelSpan ) {
+				if ( ! labelSpan.id ) { labelSpan.id = uid + '-label'; }
+				trigger.setAttribute( 'aria-labelledby', labelSpan.id );
+				labelSpan.addEventListener( 'click', function () {
+					if ( list.hidden ) { open(); } else { trigger.focus(); }
+				} );
+			}
+
+			function close() {
+				list.hidden = true;
+				trigger.setAttribute( 'aria-expanded', 'false' );
+				document.removeEventListener( 'click', onDocClick );
+			}
+			function open() {
+				list.hidden = false;
+				trigger.setAttribute( 'aria-expanded', 'true' );
+				// setTimeout: als de klik die open() aanroept van buiten wrap komt
+				// (bv. het label-tekstje), bubbelt diezelfde klik nog door naar
+				// document. Een listener die je tijdens die bubbel toevoegt wordt
+				// nog in dezelfde dispatch aangeroepen zodra de bubbel 'm bereikt -
+				// dan sluit onDocClick het menu meteen weer. Een tick later
+				// toevoegen laat 'm alleen op de VOLGENDE klik reageren.
+				setTimeout( function () { document.addEventListener( 'click', onDocClick ); }, 0 );
+				var active = options.filter( function ( o ) { return o.getAttribute( 'aria-selected' ) === 'true'; } )[ 0 ] || options[ 0 ];
+				if ( active ) { active.focus(); }
+			}
+			function onDocClick( e ) {
+				if ( ! wrap.contains( e.target ) ) { close(); }
+			}
+			function selectOption( li ) {
+				options.forEach( function ( o ) { o.removeAttribute( 'aria-selected' ); } );
+				li.setAttribute( 'aria-selected', 'true' );
+				select.value = li.getAttribute( 'data-value' );
+				valueEl.textContent = li.textContent;
+				select.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+				close();
+				trigger.focus();
+			}
+
+			trigger.addEventListener( 'click', function () {
+				if ( list.hidden ) { open(); } else { close(); }
+			} );
+			trigger.addEventListener( 'keydown', function ( e ) {
+				if ( e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ' ) {
+					e.preventDefault();
+					if ( list.hidden ) { open(); }
+				} else if ( e.key === 'Escape' ) {
+					close();
+				}
+			} );
+
+			options.forEach( function ( li ) {
+				// preventDefault: zonder dit forwardt de omringende <label class="ipb-form-field">
+				// de klik ook naar zijn eerste labelable descendant (de trigger-knop), die dan
+				// meteen weer open() aanroept omdat de lijst net dicht is gegaan.
+				li.addEventListener( 'click', function ( e ) {
+					e.preventDefault();
+					selectOption( li );
+				} );
+			} );
+			list.addEventListener( 'keydown', function ( e ) {
+				var idx = options.indexOf( document.activeElement );
+				if ( e.key === 'ArrowDown' ) {
+					e.preventDefault();
+					( options[ idx + 1 ] || options[ 0 ] ).focus();
+				} else if ( e.key === 'ArrowUp' ) {
+					e.preventDefault();
+					( options[ idx - 1 ] || options[ options.length - 1 ] ).focus();
+				} else if ( e.key === 'Enter' || e.key === ' ' ) {
+					e.preventDefault();
+					if ( idx !== -1 ) { selectOption( options[ idx ] ); }
+				} else if ( e.key === 'Escape' ) {
+					e.preventDefault();
+					close();
+					trigger.focus();
+				} else if ( e.key === 'Tab' ) {
+					close();
+				}
+			} );
+		} );
+	} )();
+
 	/* ---------- Command palette ---------- */
 	var root = document.getElementById( 'ipb-cmdk' );
 	if ( ! root ) { return; }

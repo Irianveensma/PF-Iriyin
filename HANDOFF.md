@@ -24,7 +24,12 @@ sheen, de FAQ-sectie kreeg een eigen ondoorzichtige kaart-achtergrond zodat
 het raster niet meer door de tekst schijnt, de accent-`border-left` op
 panelen/kaarten overal verwijderd (harde nieuwe eis, zie sectie 1), en de
 FAQ-accordion opent/sluit nu vloeiend (Web Animations API) in plaats van de
-harde `<details>`-snap. Zie sectie 5e. Theme assets nu op `0.25.0`.
+harde `<details>`-snap. Zie sectie 5e. Vervolgens (5f): het contactformulier
+kreeg een eigen kaart-achtergrond, een zichtbare dropdown-chevron en een
+volledig custom "Type project"-dropdown i.p.v. het native browsermenu, en
+drie FAQ-antwoorden zijn tekstueel gecorrigeerd (geen beheer-overname meer,
+geen copy/fotografie-doorverwijzing meer, hosting-antwoord herschreven).
+Theme assets nu op `0.28.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -716,6 +721,106 @@ nog steeds correct met de open-staat.
 
 ---
 
+## 5f. Sessie 4 vervolg: contactformulier + FAQ-teksten
+
+### Contactformulier: eigen kaart, chevron, entrance-animatie
+
+Irian: "Nu het contact formulier wat mooier maken." Het formulier stond tot
+nu toe los op de pagina (geen achtergrond, zoals FAQ voorheen), had geen
+zichtbaar pijltje op de "Type project"-dropdown (`appearance: none` had het
+native pijltje verwijderd zonder vervanging) en het success/error-bericht
+verscheen zonder overgang.
+
+- `.ipb-form` kreeg dezelfde platte kaart-behandeling als FAQ/Stack/Modules
+  (`background: var(--ipb-surface); border: 1px solid var(--ipb-hairline);
+  border-radius: 16px; padding: 30px 28px 32px;`, smaller op mobiel).
+- `.ipb-form-field select` kreeg een custom chevron terug via een inline
+  SVG-`background-image` (kleur `--ipb-chrome-mid`) - dit blijft ook de
+  no-JS-fallback-stijl (zie hieronder).
+- `.ipb-form-msg` (succes/fout) krijgt nu `animation: ipb-stack-in` (dezelfde
+  keyframe als Stack/Modules-panelen), met een reduced-motion-uitzondering.
+  `.ipb-module-panel` stond daar toevallig nog niet bij terwijl-ie ook
+  `ipb-stack-in` gebruikt - meteen meegepakt.
+
+### Contactformulier: custom dropdown i.p.v. het native menu
+
+Irian: "Type project uitklap venster wil ik iets mooier hebben ipv het
+simpele standaard browser menu." De native `<select>`-popup is met CSS niet
+te stylen; opgelost met een progressive-enhancement custom dropdown
+(`initCustomSelect()` in `assets/site.js`, nieuwe `.ipb-select-*`-klassen in
+`panels.css`):
+
+- De native `<select name="type">` blijft in de DOM (bron van waarheid +
+  no-JS-fallback: zonder JS blijft het gewoon het gestylede native menu van
+  hierboven) maar wordt visueel verborgen (`.ipb-select-native`,
+  `opacity:0` + `1px`-afmeting, niet `display:none` zodat 'ie z'n waarde
+  gewoon meestuurt met de form-submit).
+- Ervoor in de plaats: een `<button class="ipb-select-trigger">` + een
+  `<ul role="listbox" class="ipb-select-list">` met alle opties, zelfde
+  visuele stijl als de rest (dark surface, `ipb-stack-in`-animatie), met
+  toetsenbordnavigatie (pijltjes, Enter/Space, Escape, Tab sluit) en een
+  vinkje bij de actieve optie.
+
+**Twee subtiele bugs gevonden en gefixt tijdens het testen** (beide met
+`console.trace`/`MutationObserver`-onderzoek via de browser-devtools-pane
+opgespoord, niet zichtbaar bij een eerste blik op de code):
+
+1. **Label-forwarding.** De widget zit in `<label class="ipb-form-field">`.
+   Een `<label>` met meerdere "labelable" descendants (de native `<select>`
+   EN de nieuwe trigger-`<button>`) forwardt een klik op willekeurige andere
+   inhoud daarbinnen (een listbox-item, of het label-tekstje zelf)
+   automatisch ook naar de EERSTE labelable descendant - hier de
+   trigger-knop. Gevolg: na het selecteren van een optie ging het menu
+   zichzelf meteen weer openen. Fix: het omringende `<label>` wordt door JS
+   vervangen door een gewone `<div>` (zelfde class), met `aria-labelledby`
+   op de trigger die terugwijst naar het label-tekstje zodat schermlezers de
+   koppeling niet verliezen. Klik op dat tekstje wordt nu handmatig
+   doorverbonden naar open/focus.
+2. **"Click outside to close"-listener vuurt op z'n eigen openings-klik.**
+   `open()` voegt een `document`-click-listener toe om buiten-de-widget-klikken
+   te detecteren. Als de klik die `open()` aanriep van BUITEN `wrap` kwam (bv.
+   het label-tekstje, dat als sibling van `wrap` in dezelfde `<div>` zit) dan
+   bubbelt diezelfde klik na `open()` nog door naar `document` - en een
+   listener die je tijdens een lopende bubbel toevoegt wordt, als de node nog
+   niet bereikt was, wél voor die eigen klik aangeroepen. Resultaat: meteen
+   weer dicht. Fix: de `document`-listener met `setTimeout(fn, 0)` pas een
+   tick later toevoegen, zodat 'ie alleen op de vólgende klik reageert.
+
+Geverifieerd na de fix: `node -c` schoon, en via de browser (zowel
+`javascript_tool`-gestuurde clicks als een echte muisklik-sequentie)
+- optie selecteren via klik sluit het menu en zet de juiste waarde door naar
+  de native select; - klik op het label-tekstje opent/sluit correct
+  (toggle); - klik buiten de widget sluit 'm; - toetsenbordnavigatie werkt.
+HTTP 200 op NL/EN, debug.log leeg. Asset-versie 0.25.0 -> 0.28.0 (met een
+paar tussenliggende debug-bumps tijdens het live testen van de fix).
+
+### FAQ-teksten gecorrigeerd (3x)
+
+Drie losse contentcorrecties van Irian op de FAQ (geen codewijziging, alleen
+`update_post_meta()` op `_irian_panels[5].data.items[*].answer` /
+`_irian_panels_en[5].data.items[*].answer`, paneel-index 5 = `faq`, plus
+dezelfde tekst in `panels.json` / `panels-en.json`):
+
+- **"Werk je ook aan bestaande websites?"** - "en het overnemen van beheer"
+  eruit gehaald (klopte niet meer): "Ja. Doorontwikkeling, migraties en
+  performance-werk doe ik regelmatig. Je hoeft niet opnieuw te beginnen."
+- **"Wat heb ik nodig om te beginnen?"** - de claim "kan doorverwijzen voor
+  copy of fotografie" klopte niet (Irian verwijst niet echt door, maar denkt
+  wel mee); herschreven naar "... ik denk mee over de structuur en denk ook
+  graag mee over hoe je aan goede copy of fotografie komt."
+- **"Doe je ook hosting en onderhoud?"** - antwoord veranderde van "Ja, ik
+  host de site" naar: hosting doet Irian zelf niet meer (niet de moeite
+  waard), wel helpt hij met de stappen om dat zelf op te zetten; updates/
+  back-ups/monitoring blijft hij wel aanbieden. Nieuwe tekst: "Hosting doe ik
+  zelf niet, dat is voor mij niet de moeite waard. Wel help ik met de
+  stappen om dit zelf op te zetten. Updates, back-ups en in de gaten houden
+  of alles blijft werken kan ik wel voor je regelen."
+
+Geverifieerd: beide JSON's geldig, curl op NL/EN toont de nieuwe teksten,
+"het overnemen van beheer" komt nergens meer voor, debug.log leeg.
+
+---
+
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
 
 Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
@@ -771,7 +876,7 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.25.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.28.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
@@ -792,7 +897,8 @@ template-parts/
 assets/
   panels.css             front-end panel-styling + :root tokens + .ipb-project-*
   site.css               nav / footer / palette / .ipb-nav-tools / .ipb-lang
-  site.js                ⌘K palette, console-easter-egg, stack/modules interacties, irianI18n
+  site.js                ⌘K palette, console-easter-egg, stack/modules interacties,
+                         initFaqAccordion, initCustomSelect, irianI18n
   logo-mark.svg, favicon.svg, favicon-*.png, logo-full.svg
 README.md                thema-uitleg (dev-doc, herschreven sessie 2)
 ```
