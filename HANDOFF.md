@@ -15,7 +15,9 @@ component" -> "Snelmenu (⌘K)"), "AI content generator" herschreven zodat
 overflow-fix). Zie sectie 5d. Sessie 4: elke Stack-tegel toont nu ook "waarom
 dit ertoe doet" naast de bestaande uitleg, en WordPress + Magento zijn
 samengevoegd tot één tegel "Content Management Systems" met WordPress/
-Magento 2 als sub-skills. Zie sectie 5e. Theme assets nu op `0.22.0`.
+Magento 2 als sub-skills, aangevuld met een derde sub-skill "Headless CMS"
+(eigen AI-portalen, losgetrokken van WordPress/Magento, verwijst naar de
+Nieuws Website). Zie sectie 5e. Theme assets nu op `0.23.0`.
 
 Geen em-dashes gebruiken. Nooit. (Harde eis van Irian, geldt overal: content,
 code-commentaar, alles.)
@@ -548,6 +550,34 @@ debug.log leeg. Visueel gecontroleerd via de browser: klik op "Content
 Management Systems" toont WordPress en Magento 2 correct gestapeld, elk met
 eigen icoon en why-tekst.
 
+### Derde CMS-kind toegevoegd: "Headless CMS"
+
+Irian wilde daarnaast, los van WordPress/Magento, ook noemen dat hij met AI
+een eigen headless portaal bouwt (volledig losgetrokken van een bestaand CMS)
+- met de Nieuws Website (zie Platforms/5a) als voorbeeld. Toegevoegd als derde
+`children`-item onder de "Content Management Systems"-tag (naast WordPress en
+Magento 2), zelfde note/why-opbouw. Geen eigen icoon (geen entry in
+`inc/skill-visuals.php` voor "headless-cms"): de tekst valt zonder icoon terug
+op een lege linkerkolom.
+
+**Layout-bug ontdekt en gefixt tijdens het testen:** zonder icoon viel de
+tekst (`.ipb-stack-panel__body`) in de eerste (icoon-)kolom van het
+`260px + 1fr`-grid in plaats van de tweede, omdat een CSS-grid een los kind
+altijd in de eerste vrije track plaatst. Trof zowel deze nieuwe group-variant
+als in theorie elke toekomstige los-staande tag zonder icoon. Gefixt met een
+expliciete `grid-column: 2` op `.ipb-stack-panel__body` in `panels.css` (en
+teruggezet naar `auto` in de mobiele 620px-breakpoint, anders zou de vaste
+kolom-2-plaatsing op een 1-koloms mobiel grid een extra, ongewenste kolom
+forceren). Asset-versie opgehoogd naar `0.23.0` voor deze CSS-fix.
+
+Content toegevoegd via `update_post_meta()` op
+`_irian_panels[1].data.tags[0].children` /
+`_irian_panels_en[1].data.tags[0].children` (de CMS-tag, index 0 van
+`stack`), en gemirrored in `panels.json` / `panels-en.json`. Geverifieerd:
+beide JSON's geldig, curl op NL/EN toont de nieuwe tekst, debug.log leeg, en
+in de browser lijnt "Headless CMS" nu netjes uit onder WordPress/Magento 2
+(na de grid-fix).
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
@@ -605,7 +635,7 @@ Nog open:
 functions.php            panels-systeem: twee metaboxen (NL + EN) via
                          irian_panels_channels(), render/sanitize/save,
                          irian_field_name()/__PFX__, irian_checkbox_field(),
-                         enqueue, wp_localize_script irianI18n, asset-versie 0.22.0
+                         enqueue, wp_localize_script irianI18n, asset-versie 0.23.0
 inc/i18n.php              NL/EN laag (irian_lang, irian_str, irian_panels_data,
                          filters: <html lang>, title-tagline, title-separator ·)
 inc/skill-visuals.php     irian_skill_visual() - inline SVG per skill (+ alias
