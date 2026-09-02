@@ -1259,6 +1259,27 @@ geen console-fouten, geen em-dashes.
 line-art-iconen; layout-asymmetrie in de hero; pill-tags met `+`;
 `.ipb-cursor-ring` layout-animatie.
 
+### Deploy naar iriyin.nl (2026-09-02)
+
+Sessie 5j t/m 5m in één keer live gezet. Thema-zip gebouwd met
+`git archive --format=zip --prefix=irian-portfolio-theme/ -o <zip> HEAD:app/public/wp-content/themes/irian-portfolio-theme`
+(forward-slash entries, uit commit `ca81806`). Geupload via
+wp-admin > Weergave > Thema's > Thema uploaden > "Vervang geinstalleerd door
+geupload" (Irian ingelogd, browser-automatisering deed de klikken). Alleen
+thema-bestanden, geen content/media/DB. Git-push `fd3b4b9..ca81806` was al
+gedaan.
+
+Live geverifieerd op `https://iriyin.nl/`: assets op `?ver=0.32.0`, eyebrow
+zonder `//`, sectielabels `SELECTED WORK` etc. zonder nummers, amber primaire
+knop (`rgb(200,137,79)`), hero-naam solid, `Ctrl K` in de nav, platte
+work-cards (`rgb(30,33,42)`, geen schaduw), hero-foto laadt, geen
+console-fouten.
+
+Noot: WP toont bij het vervangen "Versie 0.1.0 -> 0.1.0" omdat de
+`style.css`-header nog op `0.1.0` staat; de echte asset-versie zit in
+`irian_enqueue_assets()`. Onschuldig, maar de style.css-versie mag een keer
+meebewegen.
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
