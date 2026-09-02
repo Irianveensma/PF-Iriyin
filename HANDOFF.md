@@ -70,8 +70,10 @@ verteld worden, in de Platforms-sectie (zie 5).
 - **Knoppen zijn plat**: primair = de accentkleur met donkere tekst, secundair
   = kale outline. Geen glans, geen 3D-rand (sessie 6, 5l - verving de glossy
   chroom-druktoetsen).
-- 3D-relief (uitgefreesde "put") nog op: de blokken van Work, Modules en de
-  kaarten van Platforms. Kandidaat om ook af te vlakken (open, zie 5l).
+- **Alles is plat** sinds 5m: de Work-, Modules- en Platforms-kaarten zijn
+  `--ipb-surface` met een haarlijn, geen uitgefreesde "put" meer. De enige
+  resterende diepte is de lichte "showroom"-stage waar de device-mockup in de
+  Work-kaart op staat.
 - Naam in de hero: **één kleur en gewicht**, geen tweekleurige "accentwoord"-
   splitsing (sessie 6, 5l).
 - Fonts: Space Grotesk (koppen), Inter (body + labels), JetBrains Mono (alleen
@@ -1211,6 +1213,51 @@ donkere tekst, radius 10px), secundair een kale outline, `.ipb-hero-accent`
 in `--ipb-text` zonder gradient-clip, amber eyebrow-streepje, actieve
 Stack-tag met amber rand + tint, open FAQ-icoon amber. PHP- en JS-lint
 schoon, `config.json` valide, geen console-fouten, geen em-dashes.
+
+---
+
+## 5m. Sessie 6 vervolg (2026-09-02) - kaarten afgevlakt (3D-"put" weg)
+
+Vervolg op 5l. De uitgefreesde "put" (`--ipb-well #090a0d` +
+`--ipb-inset-shadow`, een stapel diepe inset-schaduwen) op de Work-,
+Platforms- en Modules-blokken was ook een AI-tell. Nu plat.
+
+### Wijzigingen (`panels.css`)
+
+- `.ipb-work-card`, `.ipb-project-card`, `.ipb-lab-tile`: van
+  `background: var(--ipb-well)` + bevelrandjes + `box-shadow:
+  var(--ipb-inset-shadow)` naar **`background: var(--ipb-surface)` (#1e212a) +
+  `1px solid var(--ipb-hairline)` + `border-radius: 14px`, geen schaduw**.
+  Zelfde behandeling als de al-platte `.ipb-stack-panel` / `.ipb-module-panel`.
+- `.ipb-lab-tile--btn:hover`: nieuwe subtiele feedback (`border-color`
+  chrome-dark + `background` surface-2), want het 3D dat "klikbaar" suggereerde
+  is weg.
+- `.ipb-code`: `background: #0b0c0f` + `var(--ipb-inset-shadow)` -> `#0d0f13` +
+  hairline, geen schaduw.
+- `.ipb-select-trigger`: had nog een eigen `--ipb-well` + `--ipb-inset-shadow-sm`
+  regel; nu gelijk aan de andere formuliervelden (`#0d0f13`,
+  `rgba(255,255,255,0.12)` rand, lichte inset).
+- `:root`: tokens `--ipb-well`, `--ipb-inset-shadow`, `--ipb-inset-shadow-sm`
+  en het dode `--ipb-metal-surface` verwijderd. Comment bijgewerkt.
+  `--ipb-relief-top` blijft (nav/footer/logo in `site.css`).
+- De lichte "showroom"-stage (`.ipb-work-stage`, radial gradient waar de
+  device-mockup op staat) is **niet** aangeraakt - dat is een fotostandaard,
+  geen kaart. Eventueel later toonzachter.
+- Asset-versie `0.31.0` -> `0.32.0`.
+
+### Verificatie
+
+Live op `iriyinport.local` (0.32.0): work/project/lab-kaarten computed
+`background rgb(30,33,42)`, hairline `rgba(255,255,255,0.08)`, geen box-shadow,
+radius 14px; code-blok `#0d0f13`; select-trigger gelijk aan de formuliervelden.
+Geen dode `--ipb-well`/`--ipb-inset-shadow`-refs meer. PHP- en JS-lint schoon,
+geen console-fouten, geen em-dashes.
+
+### Nog open op de designrichting
+
+3D-stage in de Work-kaart toonzachter (optioneel); Stack-sub-labels mono;
+line-art-iconen; layout-asymmetrie in de hero; pill-tags met `+`;
+`.ipb-cursor-ring` layout-animatie.
 
 ---
 
