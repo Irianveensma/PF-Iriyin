@@ -48,7 +48,7 @@
 }
 
 .ipb-main {
-	max-width: 1120px;
+	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 40px;
 	background: transparent;
@@ -61,15 +61,15 @@
 }
 
 /* Hero */
-.ipb-hero { padding: 120px 0 100px; }
+.ipb-hero { padding: 80px 0 96px; }
 .ipb-hero.has-photo {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(260px, 400px);
+	grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
 	gap: 56px;
 	align-items: center;
 }
 @media (max-width: 860px) {
-	.ipb-hero.has-photo { grid-template-columns: 1fr; gap: 40px; padding-top: 90px; }
+	.ipb-hero.has-photo { grid-template-columns: 1fr; gap: 40px; padding-top: 64px; }
 }
 .ipb-hero-photo {
 	position: relative;
@@ -92,7 +92,7 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	aspect-ratio: 4 / 5;
+	aspect-ratio: 1 / 1.15;
 }
 @media (max-width: 860px) {
 	.ipb-hero-photo { max-width: 320px; }
@@ -184,12 +184,15 @@
 
 /* Shared section chrome - plat, alleen een haarlijn tussen secties. */
 .ipb-section {
-	padding: 90px 0;
+	padding: 72px 0;
 	border-top: 1px solid var(--ipb-hairline);
 }
 .ipb-section-label {
-	font-family: 'JetBrains Mono', monospace;
-	font-size: 13px;
+	font-family: 'Inter', sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
 	color: var(--ipb-muted-2);
 	margin-bottom: 14px;
 }
@@ -203,7 +206,7 @@
 	color: var(--ipb-muted);
 	max-width: 560px;
 	line-height: 1.65;
-	margin-bottom: 48px;
+	margin-bottom: 40px;
 }
 
 /* Stack */
@@ -801,11 +804,12 @@
 .ipb-form-field { display: block; margin-bottom: 16px; }
 .ipb-form-field > span {
 	display: block;
-	font-family: 'JetBrains Mono', monospace;
-	font-size: 11px;
-	letter-spacing: 0.05em;
+	font-family: 'Inter', sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	color: var(--ipb-muted-2);
+	color: var(--ipb-muted);
 	margin-bottom: 7px;
 }
 .ipb-form-field input,
@@ -815,12 +819,11 @@
 	font-family: 'Inter', sans-serif;
 	font-size: 15px;
 	color: var(--ipb-text);
-	background: var(--ipb-well);
-	border: 1px solid rgba(0, 0, 0, 0.6);
-	border-bottom-color: rgba(255, 255, 255, 0.09);
+	background: #0d0f13;
+	border: 1px solid rgba(255, 255, 255, 0.12);
 	border-radius: 8px;
 	padding: 12px 14px;
-	box-shadow: var(--ipb-inset-shadow-sm, inset 0 2px 4px rgba(0, 0, 0, 0.5));
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 	transition: border-color 0.15s ease;
 }
 .ipb-form-field textarea { resize: vertical; min-height: 120px; }

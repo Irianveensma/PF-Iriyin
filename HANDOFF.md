@@ -1065,6 +1065,83 @@ hamburger testen via DevTools device-mode of een echte telefoon (<= 780px:
 knop verschijnt, tik opent het paneel, tik op een link sluit + scrollt,
 Escape / buiten tikken sluit). Daarna eventueel naar iriyin.nl deployen.
 
+**Vervolg dezelfde sessie (5k):** desktop is alsnog live geverifieerd op
+`iriyinport.local` toen Local aan ging (contrast 5.46:1, hamburger verborgen
+op desktop, toggle-gedrag 4/4). Extra commit `8ea1bad` lijnt de mobiele
+dropdown-links uit met het logo. Mobiel <= 780px nog steeds niet met een
+echte screenshot getest (browser-pane verkleint niet).
+
+---
+
+## 5k. Sessie 6 vervolg (2026-09-02) - "IDE-look afzwakken" + ritme + polish
+
+Na de review (5j) vroeg Irian breder te kijken. Gekozen: groep A (dev/IDE
+afzwakken), B (lege ruimte / ritme) en C (kleine polish); de blueprint-grid
+"alleen in de hero".
+
+### A - dev/IDE-signalen afgezwakt
+
+- **A1** `//` weg voor de hero-eyebrow (`panel-hero.php`). Was
+  `// WEBDEVELOPER · MARKETEER · DIGITAL`, nu zonder de comment-syntax.
+- **A2** Sectienummers weg: `01 / SELECTED WORK` -> `SELECTED WORK` enz.
+  De nummers staan in de opgeslagen `section_label`-data (post 9 meta), niet
+  in de code. Nieuwe helper `irian_section_label()` in `inc/i18n.php` stript
+  een leidend `\d+\s*[/.\-]\s*` bij de weergave; toegepast in de 5
+  panel-templates (`panel-work_grid`, `-projects`, `-lab_grid`, `-faq`,
+  `-contact`). De ruwe waarde blijft in de metabox staan, dus het nummer
+  kan er zo weer bij. **Let op:** dit is theme-only, dus het werkt ook op
+  iriyin.nl na een thema-deploy zonder de content daar aan te raken.
+- **A3** Blueprint-grid (`.ipb-grid-bg` in `site.css`) van `position:fixed;
+  inset:0` (hele pagina) naar `position:absolute` met
+  `height: min(880px, 92vh)` en een `mask-image` linear-gradient die naar
+  transparant faded. Grid zit nu alleen achter de hero, de rest van de site
+  staat op de kale body-gradient. De `ignore-value` voor
+  `codex-grid-background` op `site.css` blijft staan (grid bestaat nog, nu
+  ingeperkt).
+- **A4** Sectielabels (`.ipb-section-label`) en formulierlabels
+  (`.ipb-form-field > span`) van JetBrains Mono naar Inter (uppercase kicker,
+  `letter-spacing`, `font-weight: 500`). Mono blijft op de code-snippet, de
+  `⌘K`-toetsen, de tech-tags, work-URL's en de footer. **Niet gedaan:** de
+  sub-labels in de Stack-panelen (`WORDPRESS`, `WAAROM DIT ERTOE DOET`) staan
+  nog in mono; kandidaat voor een vervolg.
+- **A5** Line-art-iconen in de Stack-panelen: bewust niet aangeraakt (lagere
+  prioriteit, passen bij het thema).
+- **A6** `⌘K` in de nav toont nu `Ctrl K` op niet-Mac. Nieuwe IIFE
+  `fixKbdHint()` in `site.js` (detectie via `navigator.platform`).
+
+### B - lege ruimte / ritme
+
+- **B1** Hero-padding `120px 0 100px` -> `80px 0 96px`. Foto-kolom
+  `minmax(260px, 400px)` -> `minmax(240px, 360px)`, foto-aspect `4/5` ->
+  `1/1.15` (iets vierkanter, minder "stockportret"). `align-items` blijft
+  `center`. Hero ging van ~720px naar ~590px hoog.
+- **B2** Content-, nav- en footer-breedte `max-width: 1120px` -> `1200px`.
+- **B3** Sectie-padding `90px 0` -> `72px 0`; `.ipb-section-intro`
+  `margin-bottom` `48px` -> `40px`. Totale paginahoogte ~6200px -> ~4970px.
+
+### C - kleine polish
+
+- **C1** Formuliervelden: `background: var(--ipb-well)` + bijna-onzichtbare
+  `border: 1px solid rgba(0,0,0,0.6)` -> `background: #0d0f13` +
+  `border: 1px solid rgba(255,255,255,0.12)` (zichtbare hairline) + zachtere
+  inset-schaduw. Waren donkere vlakken zonder rand.
+- **C2** `role="combobox"` toegevoegd aan `.ipb-select-trigger` in `site.js`
+  (had al `aria-haspopup="listbox"`, `aria-expanded`, `aria-controls`).
+
+### Overig
+
+- Asset-versie `0.29.0` -> `0.30.0`.
+
+### Verificatie
+
+Live op `iriyinport.local` (0.30.0): eyebrow zonder `//`, sectielabels
+`SELECTED WORK`/`PLATFORMS`/... in Inter, `Ctrl K` in de nav, grid alleen in
+de hero met fade, formuliervelden met zichtbare rand, `select` `role=combobox`,
+`.ipb-main` 1200px, hero ~590px, pagina ~4970px. PHP-lint en
+`node --check assets/site.js` schoon. Geen console-fouten. Geen em-dashes.
+Mobiel <= 780px niet met een echte screenshot getest (browser-pane verkleint
+niet); wel: de media-queries en de JS los nagelopen.
+
 ---
 
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)

@@ -26,13 +26,16 @@ body {
 body a { color: inherit; text-decoration: none; }
 
 /* Ambient achtergrond: fijn technisch raster + één trage metaalglans die
-   diagonaal heen en weer drijft. Vaste laag achter de hele pagina, boven de
-   body-gradient. Puur decoratief (aria-hidden + pointer-events:none); het
-   raster zelf staat stil, alleen de glans animeert (en die stopt bij
-   prefers-reduced-motion). */
+   diagonaal heen en weer drijft. Alleen achter de hero (bovenaan de pagina),
+   met een fade naar niets zodat de rest van de site op de kale body-gradient
+   staat. Puur decoratief (aria-hidden + pointer-events:none); het raster
+   zelf staat stil, alleen de glans animeert (stopt bij prefers-reduced-motion). */
 .ipb-grid-bg {
-	position: fixed;
-	inset: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: min(880px, 92vh);
 	z-index: -1;
 	overflow: hidden;
 	pointer-events: none;
@@ -40,6 +43,8 @@ body a { color: inherit; text-decoration: none; }
 		linear-gradient(var(--ipb-hairline) 1px, transparent 1px),
 		linear-gradient(90deg, var(--ipb-hairline) 1px, transparent 1px);
 	background-size: 48px 48px;
+	-webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 100%);
+	mask-image: linear-gradient(180deg, #000 40%, transparent 100%);
 }
 .ipb-grid-bg__sheen {
 	position: absolute;
@@ -93,7 +98,7 @@ body a { color: inherit; text-decoration: none; }
 	align-items: center;
 	justify-content: space-between;
 	gap: 24px;
-	max-width: 1120px;
+	max-width: 1200px;
 	margin: 0 auto;
 	padding: 20px 40px;
 }
@@ -232,7 +237,7 @@ body a { color: inherit; text-decoration: none; }
 
 /* FOOTER */
 .ipb-footer {
-	max-width: 1120px;
+	max-width: 1200px;
 	margin: 0 auto;
 	padding: 0 40px;
 }

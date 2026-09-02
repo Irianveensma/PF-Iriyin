@@ -8,6 +8,18 @@
 
 	var I18N = window.irianI18n || {};
 
+	/* ---------- Toetshint: cmd-K alleen op Mac, elders Ctrl+K ---------- */
+	( function fixKbdHint() {
+		var isMac = /Mac|iP(hone|ad|od)/.test( navigator.platform || navigator.userAgent || '' );
+		if ( isMac ) { return; }
+		document.querySelectorAll( '.ipb-kbd-keys kbd' ).forEach( function ( kbd ) {
+			if ( kbd.textContent.trim() === '⌘' ) {
+				kbd.textContent = 'Ctrl';
+				kbd.style.fontSize = '11px';
+			}
+		} );
+	} )();
+
 	/* ---------- Verborgen console-bericht ---------- */
 	try {
 		console.log(
@@ -234,6 +246,7 @@
 			var trigger = document.createElement( 'button' );
 			trigger.type = 'button';
 			trigger.className = 'ipb-select-trigger';
+			trigger.setAttribute( 'role', 'combobox' );
 			trigger.setAttribute( 'aria-haspopup', 'listbox' );
 			trigger.setAttribute( 'aria-expanded', 'false' );
 			trigger.setAttribute( 'aria-controls', uid );

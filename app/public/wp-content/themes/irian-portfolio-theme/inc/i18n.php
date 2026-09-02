@@ -224,6 +224,17 @@ function irian_str( $key ) {
 }
 
 /**
+ * Sectie-label voor weergave: strip een leidend volgnummer ("01 / ", "02. ")
+ * zodat alleen het label zelf toont. De ruwe waarde blijft ongemoeid in de
+ * metabox staan, dus het nummer kan er zo weer bij als dat ooit weer moet.
+ *
+ * @param string $raw De opgeslagen section_label.
+ */
+function irian_section_label( $raw ) {
+	return trim( preg_replace( '#^\s*\d+\s*[/.\-]\s*#', '', (string) $raw ) );
+}
+
+/**
  * De panel-data voor de render: Engels als dat gekozen is en er Engelse data
  * staat, anders het Nederlandse origineel.
  *

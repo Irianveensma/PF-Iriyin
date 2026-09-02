@@ -16,7 +16,7 @@ $photo = ! empty( $args['photo'] ) ? wp_get_attachment_image( $args['photo'], 'm
 ?>
 <header class="ipb-hero <?php echo $photo ? 'has-photo' : ''; ?>">
 	<div class="ipb-hero-text">
-		<span class="ipb-hero-eyebrow">// <?php echo esc_html( $args['eyebrow'] ?? '' ); ?></span>
+		<span class="ipb-hero-eyebrow"><?php echo esc_html( $args['eyebrow'] ?? '' ); ?></span>
 		<h1 class="ipb-hero-title">
 			<?php echo esc_html( $args['title_before'] ?? '' ); ?>
 			<span class="ipb-hero-accent"><?php echo esc_html( $args['title_accent'] ?? '' ); ?></span>

@@ -12,7 +12,7 @@
 $show_form = ! empty( $args['show_form'] );
 ?>
 <section class="ipb-section ipb-contact" id="contact">
-	<div class="ipb-section-label"><?php echo esc_html( $args['section_label'] ?? '' ); ?></div>
+	<div class="ipb-section-label"><?php echo esc_html( irian_section_label( $args['section_label'] ?? '' ) ); ?></div>
 	<div class="ipb-contact-inner">
 		<div class="ipb-contact-cta"><?php echo esc_html( $args['cta_text'] ?? '' ); ?></div>
 	</div>

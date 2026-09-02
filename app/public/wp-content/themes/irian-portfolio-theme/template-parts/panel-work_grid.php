@@ -21,7 +21,7 @@ $to_href = static function ( $url ) {
 };
 ?>
 <section class="ipb-section" id="work">
-	<div class="ipb-section-label"><?php echo esc_html( $args['section_label'] ?? '' ); ?></div>
+	<div class="ipb-section-label"><?php echo esc_html( irian_section_label( $args['section_label'] ?? '' ) ); ?></div>
 	<h2 class="ipb-section-title"><?php echo esc_html( $args['section_title'] ?? '' ); ?></h2>
 	<?php if ( ! empty( $args['section_intro'] ) ) : ?>
 		<p class="ipb-section-intro"><?php echo esc_html( $args['section_intro'] ); ?></p>
