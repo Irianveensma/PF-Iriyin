@@ -61,11 +61,24 @@ verteld worden, in de Platforms-sectie (zie 5).
 
 ### Designrichting
 
-- Donker, hoog contrast, metallic (chroom / gunmetal). GEEN neon-accenten.
-- "Full black is out of the question" - gunmetal, niet dood zwart. Basis `#15171c`.
-- 3D-relief (uitgefreesde "put") ALLEEN op: knoppen, de blokken van Work, de
-  blokken van Modules en de kaarten van Platforms. De rest van de site is plat.
-- Fonts: Space Grotesk (koppen), Inter (body), JetBrains Mono (code / labels).
+- Donker, hoog contrast, metallic (chroom / gunmetal) basis. Basis `#15171c`,
+  "full black is out of the question".
+- **Eén warme accentkleur** `--ipb-accent: #c8894f` (lamplicht-amber, geen
+  neon). Spaarzaam: de primaire knop, hover-/actief-staten, en een enkel
+  detail (het streepje voor de eyebrow). Toegevoegd sessie 6 (5l) toen de
+  eerdere "nul kleur"-richting te "AI" bleek.
+- **Knoppen zijn plat**: primair = de accentkleur met donkere tekst, secundair
+  = kale outline. Geen glans, geen 3D-rand (sessie 6, 5l - verving de glossy
+  chroom-druktoetsen).
+- 3D-relief (uitgefreesde "put") nog op: de blokken van Work, Modules en de
+  kaarten van Platforms. Kandidaat om ook af te vlakken (open, zie 5l).
+- Naam in de hero: **één kleur en gewicht**, geen tweekleurige "accentwoord"-
+  splitsing (sessie 6, 5l).
+- Fonts: Space Grotesk (koppen), Inter (body + labels), JetBrains Mono (alleen
+  code, `⌘K`-toetsen, tech-tags, URL's, footer). Sinds sessie 6 staan sectie-
+  en formulierlabels in Inter, niet mono.
+- Grid-achtergrond (`.ipb-grid-bg`): alleen achter de hero, met een fade
+  (sessie 6, 5k). Niet meer site-breed.
 - Schrijfstijl: nuchter, direct, geen corporate taal.
 
 ### Harde eisen van Irian (niet overschrijven)
@@ -73,12 +86,15 @@ verteld worden, in de Platforms-sectie (zie 5).
 - Geen em-dashes, nooit, nergens.
 - Geen e-mailadres zichtbaar op de site (`hello@irianveensma.nl` is alleen de
   server-side ontvanger van het formulier).
-- Donker palet behouden; de lichtere "plaat" achter secties is afgekeurd.
-- 3D alleen op de vier bloktypes hierboven, niet site-breed.
+- Donker palet als basis; de lichtere "plaat" achter secties blijft afgekeurd.
+  Eén gedempte warme accentkleur is sinds 5l wél toegestaan (geen neon).
 - Nooit een gekleurde accent-`border-left` (zoals `border-left: 2px solid
   var(--ipb-chrome-mid)`) op kaarten/panelen. Oogt volgens Irian "heel
   AI-achtig". Verwijderd op 2026-08-30 uit `.ipb-stack-panel`,
   `.ipb-module-panel` en de actieve staat van `.ipb-lab-tile--btn` (zie 5e).
+- Algemeen: keuzes die "AI-gegenereerd" aanvoelen vermijden (nul kleur,
+  glossy chroom-knoppen, tweekleurige koppen, mono-labels overal, grid
+  site-breed - allemaal teruggedraaid in sessie 6).
 
 ---
 
@@ -1141,6 +1157,60 @@ de hero met fade, formuliervelden met zichtbare rand, `select` `role=combobox`,
 `node --check assets/site.js` schoon. Geen console-fouten. Geen em-dashes.
 Mobiel <= 780px niet met een echte screenshot getest (browser-pane verkleint
 niet); wel: de media-queries en de JS los nagelopen.
+
+---
+
+## 5l. Sessie 6 vervolg (2026-09-02) - minder "AI-design": warme accentkleur, platte knoppen
+
+Irian: het mag nog wat minder "AI" ogen, en de harde eisen mogen daarvoor
+losser. Gekozen: regels loslaten waar nodig, en een **warme** accentkleur
+(amber/roest, zoals het lamplicht in de hero-foto).
+
+Wat AI-design nog verried en nu is aangepakt: nul kleur, de glossy chroom-
+druktoetsen, de tweekleurige kop ("Irian" wit / "Veensma" chroom-gradient).
+
+### Wijzigingen (`panels.css` + `site.css` + `functions.php`)
+
+- **Accentkleur**: nieuwe tokens `--ipb-accent: #c8894f` en
+  `--ipb-accent-soft: rgba(200,137,79,0.14)` in `panels.css :root`.
+  Contrast: 6.1:1 op de basis, 6.3:1 met donkere tekst erop. Spaarzaam
+  gebruikt (alleen staten en één detail):
+  - primaire knop-vulling
+  - nav-linkhover, `.ipb-lang` / `.ipb-kbd-hint` hover-rand
+  - `.ipb-work-link` hover, actieve Stack-tag (amber tint + amber rand i.p.v.
+    de glossy witte pil), actieve Lab-tile-cue, open FAQ-icoon,
+    `.ipb-select-trigger[aria-expanded]` rand + de gekozen-optie-vinkje
+  - `::selection` (in `site.css`)
+  - een kort amber streepje via `.ipb-hero-eyebrow::before` (verving het
+    weggehaalde `//`)
+- **Platte knoppen** (`.ipb-btn*`): waren wit-naar-chroom gradient met inset-
+  highlights en `0 3px 0`-rand. Nu: primair = `--ipb-accent` met tekst
+  `#1a120b` en `border-radius: 10px`; secundair = transparant met
+  `1px solid var(--ipb-chrome-dark)`, hover -> accent-rand + accent-tekst.
+- **Kop in één kleur**: `.ipb-hero-accent` had een `background-clip: text`
+  chroom-gradient; nu `color: inherit` (de naam is één wit woordbeeld).
+  De `gradient-text`-ignore in `.impeccable/config.json` is weggehaald (de
+  gradient bestaat niet meer).
+- Asset-versie `0.30.0` -> `0.31.0`.
+
+### Bewust NIET gedaan (kandidaten voor een vervolg)
+
+- 3D-"put" op de Work/Modules/Platforms-blokken afvlakken (grotere
+  identiteitsverschuiving, eerst dit laten bezinken).
+- Stack-sub-labels (`WORDPRESS`, `WAAROM DIT ERTOE DOET`) staan nog in mono.
+- Line-art-iconen in de Stack-panelen.
+- Layout-asymmetrie in de hero (nu nog symmetrisch tekst | foto).
+- Pill-tags met `+` restylen.
+- `layout-transition` op `.ipb-cursor-ring` (width/height-animatie in de
+  cursor-demo) -> `transform: scale()`.
+
+### Verificatie
+
+Live op `iriyinport.local` (0.31.0): primaire knop amber (`rgb(200,137,79)`,
+donkere tekst, radius 10px), secundair een kale outline, `.ipb-hero-accent`
+in `--ipb-text` zonder gradient-clip, amber eyebrow-streepje, actieve
+Stack-tag met amber rand + tint, open FAQ-icoon amber. PHP- en JS-lint
+schoon, `config.json` valide, geen console-fouten, geen em-dashes.
 
 ---
 
