@@ -307,7 +307,28 @@ body a { color: inherit; text-decoration: none; }
 	outline: none;
 }
 .ipb-cmdk-input::placeholder { color: var(--ipb-muted-2); }
-.ipb-cmdk-list { list-style: none; margin: 0; padding: 8px; max-height: 320px; overflow-y: auto; }
+.ipb-cmdk-list {
+	list-style: none;
+	margin: 0;
+	padding: 8px;
+	max-height: 320px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
+	scrollbar-color: var(--ipb-chrome-dark) transparent;
+}
+.ipb-cmdk-list::-webkit-scrollbar { width: 10px; }
+.ipb-cmdk-list::-webkit-scrollbar-track { background: transparent; }
+.ipb-cmdk-list::-webkit-scrollbar-thumb {
+	background: var(--ipb-chrome-dark);
+	border-radius: 999px;
+	border: 3px solid transparent;
+	background-clip: content-box;
+}
+.ipb-cmdk-list::-webkit-scrollbar-thumb:hover {
+	background: #5b5f68;
+	background-clip: content-box;
+}
 .ipb-cmdk-item {
 	display: flex;
 	align-items: center;

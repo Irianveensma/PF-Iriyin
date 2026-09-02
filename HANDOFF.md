@@ -1282,6 +1282,28 @@ meebewegen.
 
 ---
 
+## 5n. Sessie 6 vervolg (2026-09-02) - AI-snippet-module weg + palette-scrollbar
+
+- **Module "AI-snippet: productteksten" verwijderd** (EN "AI snippet: product
+  copy"). Was `content_type: code` in het `lab_grid`-paneel, item[0], geen
+  demo-koppeling - dus puur content, geen PHP-wijziging. Verwijderd uit:
+  Local `_irian_panels` + `_irian_panels_en` (pagina 9, via wp-cli),
+  productie `_irian_panels` + `_irian_panels_en` (iriyin.nl pagina 425, via
+  de wp-admin panels-metabox: subitem zoeken op titel, `.irian-remove-item`
+  klikken, Opslaan - `irian-remove-item` heeft geen confirm-dialoog), en de
+  scratchpad-bronnen `panels.json` / `panels-en.json`. Modules nu 4 tegels
+  (WordPress-toolkit, cursor-effect, SEO audit tool, Snelmenu). Live
+  geverifieerd op iriyin.nl NL + EN.
+- **Command-palette-scrollbar gestyled** (`site.css`, `.ipb-cmdk-list`): was
+  de standaard browser-slider, nu een dunne subtiele pill
+  (`--ipb-chrome-dark`, `border-radius: 999px`, `3px` transparante rand via
+  `background-clip: content-box`, transparante track) plus `scrollbar-width:
+  thin` / `scrollbar-color` voor Firefox en `overscroll-behavior: contain`.
+- Asset-versie `0.32.0` -> `0.33.0`. **Nog niet naar iriyin.nl gedeployed**
+  (de scrollbar-CSS); de module-verwijdering staat al live (content).
+
+---
+
 ## 6. Eerdere designronde (na Figma-feedback, 2026-08-27/28)
 
 Volledige historie in `figma-feedback-2026-08-27.md` (memory). Kort:
