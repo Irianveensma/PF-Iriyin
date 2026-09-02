@@ -186,7 +186,7 @@ function irian_render_panel_fields( $type, $index, $data ) {
 			irian_textarea_field( 'Sectie-intro', $index, 'data[section_intro]', $data['section_intro'] ?? '' );
 
 			echo '<div class="irian-subrepeater" data-field="items">';
-			echo '<span class="irian-subrepeater-label">Projecten</span>';
+			echo '<span class="irian-subrepeater-label">Projecten <span class="irian-subrepeater-count"></span></span>';
 			echo '<ul class="irian-subrepeater-list">';
 			$items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
 			foreach ( $items as $item_index => $item ) {
@@ -205,7 +205,7 @@ function irian_render_panel_fields( $type, $index, $data ) {
 			irian_textarea_field( 'Sectie-intro', $index, 'data[section_intro]', $data['section_intro'] ?? '' );
 
 			echo '<div class="irian-subrepeater" data-field="items">';
-			echo '<span class="irian-subrepeater-label">Tiles</span>';
+			echo '<span class="irian-subrepeater-label">Tiles <span class="irian-subrepeater-count"></span></span>';
 			echo '<ul class="irian-subrepeater-list">';
 			$items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
 			foreach ( $items as $item_index => $item ) {
@@ -222,7 +222,7 @@ function irian_render_panel_fields( $type, $index, $data ) {
 			irian_textarea_field( 'Sectie-intro', $index, 'data[section_intro]', $data['section_intro'] ?? '' );
 
 			echo '<div class="irian-subrepeater" data-field="items">';
-			echo '<span class="irian-subrepeater-label">Projecten</span>';
+			echo '<span class="irian-subrepeater-label">Projecten <span class="irian-subrepeater-count"></span></span>';
 			echo '<ul class="irian-subrepeater-list">';
 			$items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
 			foreach ( $items as $item_index => $item ) {
@@ -239,7 +239,7 @@ function irian_render_panel_fields( $type, $index, $data ) {
 			irian_textarea_field( 'Sectie-intro', $index, 'data[section_intro]', $data['section_intro'] ?? '' );
 
 			echo '<div class="irian-subrepeater" data-field="items">';
-			echo '<span class="irian-subrepeater-label">Vragen</span>';
+			echo '<span class="irian-subrepeater-label">Vragen <span class="irian-subrepeater-count"></span></span>';
 			echo '<ul class="irian-subrepeater-list">';
 			$items = isset( $data['items'] ) && is_array( $data['items'] ) ? $data['items'] : array();
 			foreach ( $items as $item_index => $item ) {
@@ -873,6 +873,14 @@ function irian_panels_enqueue_admin_assets( $hook ) {
 				} );
 			} );
 		} );
+		updateSubrepeaterCounts();
+	}
+
+	function updateSubrepeaterCounts() {
+		$( '.irian-subrepeater' ).each( function () {
+			var count = $( this ).find( '> .irian-subrepeater-list > li.irian-subitem' ).length;
+			$( this ).find( '> .irian-subrepeater-label > .irian-subrepeater-count' ).text( count );
+		} );
 	}
 
 	$( function () {
@@ -889,6 +897,8 @@ function irian_panels_enqueue_admin_assets( $hook ) {
 			$wrap.children( '.irian-panels-list' ).sortable( { handle: '.irian-panel-handle', axis: 'y', update: renumberAll } );
 			$wrap.find( '.irian-subrepeater-list' ).each( function () { ensureSortable( $( this ) ); } );
 		} );
+
+		updateSubrepeaterCounts();
 
 		$( document ).on( 'click', '.irian-toggle-panel', function () {
 			$( this ).closest( '.irian-panel' ).children( '.irian-panel-body' ).slideToggle( 150 );
@@ -930,6 +940,7 @@ function irian_panels_enqueue_admin_assets( $hook ) {
 			$itemsList.append( $li );
 			ensureSortable( $itemsList );
 			initMediaButtons( $li );
+			updateSubrepeaterCounts();
 		} );
 
 		$( document ).on( 'click', '.irian-remove-item', function () {
@@ -970,25 +981,57 @@ JS;
 	wp_add_inline_script( 'jquery', $inline_js );
 
 	$inline_css = <<<'CSS'
-.irian-panels-wrap { max-width: 900px; }
-.irian-channel-note { max-width: 900px; margin: 0 0 14px; padding: 10px 12px; background: #f0f6fc; border-left: 4px solid #72aee6; color: #1d2327; }
+/* Metaboxes-container is de volle editorbreedte (er is geen block-content,
+ * alles loopt via panels) - zonder ruime max-width blijft dat een smalle
+ * strook velden met een enorme lege vlakte ernaast op brede schermen. */
+.irian-panels-wrap { max-width: 1200px; }
+.irian-channel-note { max-width: 1200px; margin: 0 0 20px; padding: 12px 16px; background: #f0f6fc; border: 1px solid #c5dcf0; border-radius: 6px; color: #1d2327; line-height: 1.5; }
 .irian-channel-note code { background: rgba( 0, 0, 0, 0.06 ); padding: 1px 5px; border-radius: 3px; }
-.irian-panels-list { margin: 0 0 16px; padding: 0; list-style: none; }
-.irian-panel { border: 1px solid #dcdcde; border-radius: 4px; background: #fff; margin-bottom: 10px; }
-.irian-panel-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #f6f7f7; border-bottom: 1px solid #dcdcde; border-radius: 4px 4px 0 0; }
-.irian-panel-handle { cursor: grab; color: #787c82; font-size: 16px; }
-.irian-panel-title { font-weight: 600; flex: 1; }
-.irian-panel-body { padding: 16px; }
-.irian-field { display: block; margin-bottom: 14px; }
-.irian-field span { display: block; font-weight: 600; margin-bottom: 4px; }
-.irian-field input[type="text"], .irian-field input[type="url"], .irian-field input[type="email"], .irian-field textarea { width: 100%; max-width: 100%; }
-.irian-image-preview img { max-width: 160px; height: auto; display: block; margin-bottom: 8px; border: 1px solid #dcdcde; border-radius: 4px; }
-.irian-subrepeater { border-left: 3px solid #dcdcde; padding-left: 14px; margin: 16px 0; }
-.irian-subrepeater-label { display: block; font-weight: 600; margin-bottom: 8px; }
-.irian-subrepeater-list { margin: 0 0 10px; padding: 0; list-style: none; }
-.irian-subitem { background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 4px; padding: 12px 14px; margin-bottom: 10px; position: relative; }
-.irian-subitem .irian-remove-item { position: absolute; top: 12px; right: 14px; color: #b32d2e; }
-.irian-add-panel-row { display: flex; gap: 10px; align-items: center; }
+
+.irian-panels-list { margin: 0 0 18px; padding: 0; list-style: none; }
+
+.irian-panel { border: 1px solid #dcdcde; border-radius: 8px; background: #fff; margin-bottom: 18px; box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.04 ); overflow: hidden; }
+.irian-panel-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #f6f7f7; border-bottom: 1px solid #dcdcde; }
+.irian-panel-handle { cursor: grab; color: #8c8f94; font-size: 18px; line-height: 1; }
+.irian-panel-handle:active { cursor: grabbing; }
+.irian-panel-title { font-weight: 600; font-size: 14px; flex: 1; color: #1d2327; }
+.irian-panel-header .button-link { font-size: 13px; padding: 4px 8px; border-radius: 4px; text-decoration: none; }
+.irian-panel-header .button-link:hover { background: rgba( 0, 0, 0, 0.05 ); }
+.irian-remove-panel { color: #b32d2e; }
+.irian-remove-panel:hover { background: rgba( 179, 45, 46, 0.08 ) !important; }
+
+.irian-panel-body { padding: 22px 22px 24px; }
+
+.irian-field { display: block; margin-bottom: 22px; }
+.irian-field:last-child { margin-bottom: 0; }
+.irian-field span { display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px; color: #1d2327; }
+/* Inputs blijven leesbaar breed (niet uitrekken tot 1400px) ook al is de
+ * wrap eromheen nu ruim - een regel van 1 meter breed leest niemand prettig. */
+.irian-field input[type="text"], .irian-field input[type="url"], .irian-field input[type="email"], .irian-field textarea, .irian-field select { width: 100%; padding: 8px 10px; border-radius: 4px; }
+.irian-field input[type="text"], .irian-field input[type="url"], .irian-field input[type="email"] { max-width: 640px; }
+.irian-field select { max-width: 420px; }
+.irian-field textarea { max-width: 820px; line-height: 1.5; }
+.irian-field.irian-inline { display: flex; align-items: center; gap: 8px; }
+
+.irian-image-preview img { max-width: 180px; height: auto; display: block; margin-bottom: 8px; border: 1px solid #dcdcde; border-radius: 4px; }
+
+.irian-subrepeater { background: #f9f9fa; border: 1px solid #e2e2e3; border-radius: 8px; padding: 18px; margin: 24px 0; }
+.irian-subrepeater-label { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #50575e; }
+.irian-subrepeater-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #dcdcde; color: #1d2327; font-weight: 600; font-size: 11px; text-transform: none; letter-spacing: normal; }
+.irian-subrepeater-list { margin: 0 0 14px; padding: 0; list-style: none; }
+.irian-subitem { background: #fff; border: 1px solid #dcdcde; border-radius: 6px; padding: 16px 46px 6px 16px; margin-bottom: 12px; position: relative; }
+.irian-subitem:last-child { margin-bottom: 0; }
+.irian-subitem .irian-field { margin-bottom: 16px; }
+.irian-subitem .irian-remove-item { position: absolute; top: 12px; right: 12px; color: #b32d2e; font-size: 12px; padding: 4px 6px; border-radius: 4px; }
+.irian-subitem .irian-remove-item:hover { background: rgba( 179, 45, 46, 0.08 ); }
+
+.irian-add-item { display: inline-flex; align-items: center; gap: 6px; }
+.irian-add-item::before { content: "+"; font-weight: 700; }
+
+.irian-add-panel-row { display: flex; gap: 10px; align-items: center; padding: 16px 18px; background: #f6f7f7; border: 1px dashed #a7aaad; border-radius: 8px; }
+.irian-add-panel-type { min-width: 220px; }
+.irian-add-panel-btn { display: inline-flex; align-items: center; gap: 6px; }
+.irian-add-panel-btn::before { content: "+"; font-weight: 700; }
 CSS;
 
 	wp_register_style( 'irian-panels-admin-inline', false );

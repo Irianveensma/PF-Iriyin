@@ -958,11 +958,53 @@ zelf-bewerken nu weer veilig kan - niet alleen een aanname.
 
 Alleen `functions.php` aangepast, geen wijziging aan `panel-stack.php`,
 CSS of de opgeslagen data zelf nodig (de data stond al in de juiste vorm;
-alleen het lees/schrijf-pad van de metabox was kapot). Nog te doen: deze fix
-ook naar iriyin.nl overzetten (het thema daar is de versie van vóór deze
-fix) en, breder, in het vervolg bij elke nieuwe paneel-datavelden ook
-meteen de bijbehorende metabox-UI bijwerken in plaats van er via losse
-scripts omheen te werken.
+alleen het lees/schrijf-pad van de metabox was kapot). Deze fix is later
+in dezelfde sessie alsnog naar iriyin.nl overgezet (zie 5i) - breder blijft
+de les staan: bij elke nieuwe paneel-datavelden ook meteen de bijbehorende
+metabox-UI bijwerken in plaats van er via losse scripts omheen te werken.
+
+---
+
+## 5i. Sessie 5 (2026-08-31) - metabox-editor: leesbaarheid + item toevoegen
+
+Irian: de "ACF-achtige" plugin (= het panels-systeem, zie 3/5h - géén losse
+plugin, alles in `functions.php`, bewust zo gebouwd voor de Theme File
+Editor) oogde "aan de achterkant" te dicht op elkaar, en het leek alsof je
+geen paneel/item kon toevoegen (bv. extra project bij Geselecteerd Werk).
+
+Root cause (bevestigd via een screenshot van Irian + DOM-inspectie op
+iriyin.nl): het klopte functioneel al - `irian-add-panel-btn` en
+`irian-add-item` bestonden en werkten - maar de admin-CSS begrensde
+`.irian-panels-wrap` op `max-width: 900px` zonder duidelijke knop-styling.
+In de Block Editor (Gutenberg) staat de metabox-kolom naast een lege
+canvas (dit thema rendert geen block-content, alles loopt via panels), dus
+op een breed scherm oogt een smalle 900px-kolom als een piepklein velden-
+stripje naast een enorme lege vlakte - vandaar het "dicht op elkaar"-gevoel.
+
+Fix (alleen in `irian_panels_enqueue_admin_assets()` in `functions.php`,
+puur admin-CSS/JS, geen wijziging aan front-end bestanden):
+- `.irian-panels-wrap` van 900px naar 1200px max-width (minder lege
+  vlakte), maar individuele velden zelf begrensd
+  (`input`/`url`/`email` 640px, `select` 420px, `textarea` 820px) zodat
+  tekstvelden niet absurd breed uitrekken - alleen de buitenkant kreeg
+  meer ademruimte.
+- Panelen/subitems: duidelijkere kaart-styling (schaduw, ronding, meer
+  padding), velden 14px -> 22px marge, subitem-kaarten los van elkaar.
+- "Panel toevoegen" en "Project/Tile/Vraag toevoegen" knoppen nu met
+  duidelijk stippellijn-kader + "+"-icoon (waren voorheen kale WP-knoppen
+  die makkelijk over het hoofd werden gezien tussen de dichte tekst).
+- Nieuw: elke subrepeater-label toont nu een teller
+  (`.irian-subrepeater-count`, bv. "Projecten 2") die live bijwerkt bij
+  toevoegen/verwijderen/herschikken.
+
+Gedeployed naar iriyin.nl via een verse thema-zip (dezelfde
+`System.IO.Compression.ZipFile`-methode als bij de migratie, forward-slash
+entry-namen) + "Vervang geïnstalleerd door geüpload" in wp-admin. Live
+geverifieerd: `.irian-panels-wrap` breedte = 1200px, subrepeater-teller
+klopt (Projecten 2, Tiles 5, Vragen 5 op zowel NL als EN), en een test-
+project via "+Project toevoegen" toegevoegd + weer verwijderd werkte
+foutloos (niet opgeslagen, dus geen wijziging aan de echte content).
+Front-end (`https://iriyin.nl/`) na deploy nagekeken: ongewijzigd/gezond.
 
 ---
 
