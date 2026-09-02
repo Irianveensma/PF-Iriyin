@@ -357,6 +357,48 @@
 		} );
 	} )();
 
+	/* ---------- Mobiele nav: hamburger klapt de sectielinks uit ---------- */
+	( function initNavToggle() {
+		var nav = document.querySelector( '.ipb-nav' );
+		var toggle = nav && nav.querySelector( '.ipb-nav-toggle' );
+		var links = nav && nav.querySelector( '.ipb-nav-links' );
+		if ( ! nav || ! toggle || ! links ) { return; }
+
+		function setOpen( open ) {
+			nav.classList.toggle( 'ipb-nav--open', open );
+			toggle.setAttribute( 'aria-expanded', String( open ) );
+		}
+
+		toggle.addEventListener( 'click', function () {
+			setOpen( toggle.getAttribute( 'aria-expanded' ) !== 'true' );
+		} );
+
+		// Klik op een sectielink: de pagina scrollt weg, dus het paneel weer dicht.
+		links.addEventListener( 'click', function ( e ) {
+			if ( e.target.closest( 'a' ) ) { setOpen( false ); }
+		} );
+
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( e.key === 'Escape' && nav.classList.contains( 'ipb-nav--open' ) ) {
+				setOpen( false );
+				toggle.focus();
+			}
+		} );
+		document.addEventListener( 'click', function ( e ) {
+			if ( nav.classList.contains( 'ipb-nav--open' ) && ! nav.contains( e.target ) ) {
+				setOpen( false );
+			}
+		} );
+
+		// Terug naar een breed scherm: open-staat resetten zodat de desktoprij klopt.
+		if ( window.matchMedia ) {
+			var wide = window.matchMedia( '(min-width: 781px)' );
+			var reset = function ( e ) { if ( e.matches ) { setOpen( false ); } };
+			if ( wide.addEventListener ) { wide.addEventListener( 'change', reset ); }
+			else if ( wide.addListener ) { wide.addListener( reset ); }
+		}
+	} )();
+
 	/* ---------- Command palette ---------- */
 	var root = document.getElementById( 'ipb-cmdk' );
 	if ( ! root ) { return; }

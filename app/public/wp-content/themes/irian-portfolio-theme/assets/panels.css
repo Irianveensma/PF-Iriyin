@@ -12,7 +12,11 @@
 	--ipb-surface-2: #262a34;
 	--ipb-text: #f3f4f6;
 	--ipb-muted: #a0a3ac;
-	--ipb-muted-2: #666a74;
+	/* Dimste tekstlaag (sectielabels, notities, tags). Opgetrokken van #666a74
+	   (3.3:1 op de gunmetal-basis, onder WCAG AA) naar 4.9-5.5:1 op de basis en
+	   de kaart-oppervlakken; blijft duidelijk secundair naast --ipb-muted maar
+	   is nu leesbaar. */
+	--ipb-muted-2: #8a8e97;
 
 	/* Chrome / metallic */
 	--ipb-chrome-light: #eceef1;

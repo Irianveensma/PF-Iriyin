@@ -160,7 +160,70 @@ body a { color: inherit; text-decoration: none; }
 	font-size: 12px;
 }
 .ipb-kbd-keys { display: inline-flex; gap: 2px; }
-@media (max-width: 780px) { .ipb-nav-links, .ipb-kbd-label { display: none; } }
+
+/* Hamburger. Alleen zichtbaar onder 780px, waar de sectielinks in een
+   uitklappaneel onder de balk gaan. */
+.ipb-nav-toggle {
+	display: none;
+	width: 34px;
+	height: 34px;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: 1px solid var(--ipb-hairline);
+	border-radius: 8px;
+	color: var(--ipb-muted);
+	cursor: pointer;
+	transition: border-color 0.2s ease, color 0.2s ease;
+}
+.ipb-nav-toggle:hover { border-color: var(--ipb-chrome-mid); color: var(--ipb-text); }
+.ipb-nav-toggle__bars,
+.ipb-nav-toggle__bars::before,
+.ipb-nav-toggle__bars::after {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 16px;
+	height: 1.5px;
+	background: currentColor;
+	transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.ipb-nav-toggle__bars { position: relative; }
+.ipb-nav-toggle__bars::before { top: -5px; }
+.ipb-nav-toggle__bars::after { top: 5px; }
+.ipb-nav--open .ipb-nav-toggle__bars { background: transparent; }
+.ipb-nav--open .ipb-nav-toggle__bars::before { transform: translateY(5px) rotate(45deg); }
+.ipb-nav--open .ipb-nav-toggle__bars::after { transform: translateY(-5px) rotate(-45deg); }
+
+@media (max-width: 780px) {
+	.ipb-kbd-label { display: none; }
+	.ipb-nav-toggle { display: inline-flex; }
+	.ipb-nav-links {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		flex-direction: column;
+		gap: 0;
+		padding: 6px 20px 14px;
+		background: var(--ipb-base-2);
+		border-bottom: 1px solid var(--ipb-hairline-dark);
+		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+		display: none;
+	}
+	.ipb-nav--open .ipb-nav-links { display: flex; }
+	.ipb-nav-links a {
+		padding: 13px 2px;
+		font-size: 15px;
+		border-top: 1px solid var(--ipb-hairline);
+	}
+	.ipb-nav-links a:first-child { border-top: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.ipb-nav-toggle__bars,
+	.ipb-nav-toggle__bars::before,
+	.ipb-nav-toggle__bars::after { transition: none; }
+}
 
 /* FOOTER */
 .ipb-footer {
@@ -268,7 +331,7 @@ body a { color: inherit; text-decoration: none; }
 	margin-right: 3px;
 }
 
-a:focus-visible, .ipb-btn:focus-visible, .ipb-kbd-hint:focus-visible {
+a:focus-visible, .ipb-btn:focus-visible, .ipb-kbd-hint:focus-visible, .ipb-nav-toggle:focus-visible {
 	outline: 2px solid var(--ipb-chrome-light);
 	outline-offset: 3px;
 }

@@ -1,6 +1,6 @@
 # Handoff - Irian's portfoliowebsite (WordPress, lokaal via Local)
 
-Laatste update: 2026-08-30 (sessie 4). Dit document vervangt de vorige handoff en
+Laatste update: 2026-09-02 (sessie 6). Dit document vervangt de vorige handoff en
 beschrijft de volledige stand van zaken. Sessie 2: de open follow-ups uit
 sectie 7 afgewerkt (EN-metabox in wp-admin, contact-adres, title-separator,
 em-dashes uit de dev-docs, git-repo), de Platforms-copy verrijkt, de
@@ -1005,6 +1005,65 @@ klopt (Projecten 2, Tiles 5, Vragen 5 op zowel NL als EN), en een test-
 project via "+Project toevoegen" toegevoegd + weer verwijderd werkte
 foutloos (niet opgeslagen, dus geen wijziging aan de echte content).
 Front-end (`https://iriyin.nl/`) na deploy nagekeken: ongewijzigd/gezond.
+
+---
+
+## 5j. Sessie 6 (2026-09-02) - design-review + twee P1-fixes (mobiele nav, contrast)
+
+Aanleiding: review van iriyin.nl met de `impeccable`-skill (design-critique).
+Score 26/36 (72%, "goed, onderkant"). Twee bevindingen met P1: op mobiel
+verdween de hele nav, en een deel van de tekst zat onder WCAG AA. Irian koos
+"eerst de P1's, esthetiek-afzwakken als aparte ronde later".
+
+### Fix 1: mobiele navigatie (was helemaal weg onder 780px)
+
+Root cause: `site.css` had `@media (max-width: 780px) { .ipb-nav-links { display:
+none } }` zonder enige vervanging. Alleen het `⌘K`-icoon bleef over (met het
+label ook verborgen), en dat is op een telefoon betekenisloos. Geen hamburger.
+
+- `header.php`: knop `.ipb-nav-toggle` toegevoegd in `.ipb-nav-tools`
+  (`aria-expanded` / `aria-controls="ipb-nav-links"`), en `id="ipb-nav-links"`
+  op de linkrij.
+- `inc/i18n.php`: string `menu_aria` (NL "Navigatiemenu", EN "Navigation menu").
+- `site.css`: onder 780px klappen de sectielinks nu uit als paneel onder de
+  balk (`.ipb-nav--open .ipb-nav-links`), i.p.v. verdwijnen. Hamburger in de
+  stijl van de bestaande `.ipb-lang` / `⌘K`-pillen, animeert naar een kruis.
+  `:focus-visible` en `prefers-reduced-motion` meegenomen.
+- `site.js`: `initNavToggle()` - klik opent/sluit, sluit ook bij klik op een
+  link, Escape (met focus terug naar de knop), klik buiten de nav, en bij
+  terugschalen naar >= 781px.
+
+### Fix 2: tekstcontrast onder WCAG AA
+
+Root cause: `--ipb-muted-2` stond op `#666a74` = 3.3:1 op de gunmetal-basis
+(AA vereist 4.5:1). Dat token draagt de sectielabels (`01 / SELECTED WORK`),
+de "De rest van mijn werk"-alinea, form-notities en alle mono-tags.
+
+- `panels.css`: `--ipb-muted-2` -> `#8a8e97`. Nu 4.9-5.5:1 op de basis en de
+  kaart-oppervlakken, blijft duidelijk secundair naast `--ipb-muted` (#a0a3ac).
+  Eén token, dus overal in één keer opgelost.
+
+### Overig
+
+- `functions.php`: asset-versie `0.28.0` -> `0.29.0` (cache-bust voor de CSS/JS).
+- De custom `<select>` (klein `role`-nit) is bewust niet aangeraakt; die code
+  heeft veel edge-case-comments en viel buiten de gekozen P1-scope. Staat als
+  follow-up genoteerd.
+- `.impeccable/config.json` (nieuw, git-ignored): smalle uitzonderingen voor de
+  designdetector-hook op bewuste keuzes - de chroom-gradient op
+  `.ipb-hero-accent`, en de fonts Inter / Space Grotesk. De hook flagde ook de
+  blueprint-grid (`.ipb-grid-bg`) en een `layout-transition` in de SEO-demo;
+  die staan bewust nog open (de grid is het onderwerp van de esthetiek-ronde).
+
+### Verificatie
+
+PHP-lint en `node --check assets/site.js` schoon. **Nog niet visueel
+geverifieerd**: de Local-site draaide niet tijdens deze sessie, en de mobiele
+weergave was in de browser-pane niet te emuleren (viewport bleef op desktop).
+Nog te doen: Local starten, desktop nakijken (contrast + niks gebroken), en de
+hamburger testen via DevTools device-mode of een echte telefoon (<= 780px:
+knop verschijnt, tik opent het paneel, tik op een link sluit + scrollt,
+Escape / buiten tikken sluit). Daarna eventueel naar iriyin.nl deployen.
 
 ---
 

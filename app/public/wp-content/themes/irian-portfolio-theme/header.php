@@ -19,7 +19,7 @@
 			<img class="ipb-logo-mark" src="<?php echo esc_url( get_template_directory_uri() . '/assets/logo-mark.svg' ); ?>" alt="" width="30" height="30">
 			<span class="ipb-logo-word">iriyin</span>
 		</a>
-		<div class="ipb-nav-links">
+		<div class="ipb-nav-links" id="ipb-nav-links">
 			<a href="#work"><?php echo esc_html( irian_str( 'nav_work' ) ); ?></a>
 			<a href="#platforms"><?php echo esc_html( irian_str( 'nav_platforms' ) ); ?></a>
 			<a href="#lab"><?php echo esc_html( irian_str( 'nav_modules' ) ); ?></a>
@@ -35,6 +35,9 @@
 			<button type="button" class="ipb-kbd-hint" data-ipb-cmdk-open aria-label="<?php echo esc_attr( irian_str( 'kbd_aria' ) ); ?>">
 				<span class="ipb-kbd-keys"><kbd>&#8984;</kbd><kbd>K</kbd></span>
 				<span class="ipb-kbd-label"><?php echo esc_html( irian_str( 'kbd_label' ) ); ?></span>
+			</button>
+			<button type="button" class="ipb-nav-toggle" aria-expanded="false" aria-controls="ipb-nav-links" aria-label="<?php echo esc_attr( irian_str( 'menu_aria' ) ); ?>">
+				<span class="ipb-nav-toggle__bars" aria-hidden="true"></span>
 			</button>
 		</div>
 	</div>
