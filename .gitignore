@@ -8,6 +8,7 @@
 !/.gitattributes
 !/README.md
 !/HANDOFF.md
+!/CLAUDE.md
 
 # Pad openhouden naar wp-content.
 !/app/
